@@ -1,17 +1,28 @@
 <?php
 
-//INCLUDE THE FILES NEEDED...
-require_once('view/LoginView.php');
-require_once('view/DateTimeView.php');
-require_once('view/LayoutView.php');
+// Require Authentication logic
+require_once('./core/Authenticate.php');
 
-//MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
+// Get controller from query string
+if (empty($_SERVER['QUERY_STRING'])) {
+    $controller = 'login';
+} else {
+    $controller = explode('=', $_SERVER['QUERY_STRING'])[0];
+}
 
-//CREATE OBJECTS OF THE VIEWS
-$loginView = new LoginView();
-$dateTimeView = new DateTimeView();
-$layoutView = new LayoutView();
+// Routes
+switch ($controller) {
+    case 'login':
+        require_once('./controller/LoginController.php');
+        $controller = new LoginController();
+        break;
+    /*
+    default:
+        require_once('./controller/ErrorController.php');
+        $controller = new ErrorController();
+        break;
+    */
+}
 
-$layoutView->render(false, $loginView, $dateTimeView);
+// Render the main layout
+require_once('./view/LayoutView.php');
