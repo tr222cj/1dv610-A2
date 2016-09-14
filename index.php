@@ -1,7 +1,7 @@
 <?php
 
-// Require Authentication logic
-require_once('./core/Authenticate.php');
+// Require logic
+require_once('./core/Session.php');
 
 // Get controller from query string
 if (empty($_SERVER['QUERY_STRING'])) {
@@ -9,6 +9,9 @@ if (empty($_SERVER['QUERY_STRING'])) {
 } else {
     $controller = explode('=', $_SERVER['QUERY_STRING'])[0];
 }
+
+// Start new or resume existing session
+session_start();
 
 // Routes
 switch ($controller) {

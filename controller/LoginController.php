@@ -1,26 +1,21 @@
 <?php
 
+require_once('./model/LoginModel.php');
+
 class LoginController {
 
     /**
      * Renders the current view
      */
     public function render() {
-        $message = '';
-        $username = '';
+        $username = $_POST['LoginView::UserName'];
+        $password = $_POST['LoginView::Password'];
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (empty($_POST['LoginView::UserName'])) {
-                $message = 'Username is missing';
-            } elseif (empty($_POST['LoginView::Password'])) {
-                $message = 'Password is missing';
-                $username = $_POST['LoginView::UserName'];
-            } else {
-                // Try login
-            }
+        if (($_SERVER['REQUEST_METHOD'] === 'POST') && LoginModel::login($username, $password)) {
+            // require_once('./view/LogoutView.php');
+        } else {
+            $message = Session::get('feedback');
+            require_once('./view/LoginView.php');
         }
-
-        // Require current view
-        require_once('./view/LoginView.php');
     }
 }

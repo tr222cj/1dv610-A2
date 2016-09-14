@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Assignment 2</h1>
-<h2><?php echo (Authenticate::isUserLoggedIn()) ? 'Logged in' : 'Not logged in'; ?></h2>
+<h2><?php echo (Session::get("isUserLoggedIn")) ? 'Logged in' : 'Not logged in'; ?></h2>
 
 <div class="container">
     <?php $controller->render(); ?>

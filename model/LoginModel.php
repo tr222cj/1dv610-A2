@@ -1,0 +1,31 @@
+<?php
+
+require_once('./model/UserModel.php');
+
+class LoginModel
+{
+    public static function login($username, $password) {
+        if (empty($username)) {
+            Session::set('feedback', 'Username is missing');
+            return false;
+        }
+
+        if (empty($password)) {
+            Session::set('feedback', 'Password is missing');
+            return false;
+        }
+
+        return self::validateUser($username, $password);
+    }
+
+    private static function validateUser($username, $password) {
+        $user = UserModel::getUser($username);
+
+        if (!$user || $user !== $password) {
+            Session::set('feedback', 'Wrong name or password');
+            return false;
+        }
+
+        return false;
+    }
+}
