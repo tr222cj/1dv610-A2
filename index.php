@@ -11,13 +11,14 @@ if (empty($_SERVER['QUERY_STRING'])) {
 }
 
 // Start new or resume existing session
-session_start();
+Session::start();
 
 // Routes
 switch ($controller) {
     case 'login':
         require_once('./controller/LoginController.php');
         $controller = new LoginController();
+        $controller->render();
         break;
     /*
     default:
@@ -26,6 +27,3 @@ switch ($controller) {
         break;
     */
 }
-
-// Render the main layout
-require_once('./view/LayoutView.php');

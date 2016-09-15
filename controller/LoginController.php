@@ -11,11 +11,12 @@ class LoginController {
         $username = $_POST['LoginView::UserName'];
         $password = $_POST['LoginView::Password'];
 
-        if (($_SERVER['REQUEST_METHOD'] === 'POST') && LoginModel::login($username, $password)) {
-            // require_once('./view/LogoutView.php');
+        if (LoginModel::login($username, $password)) {
+            $view = 'LogoutView.php';
+            require_once('./view/LayoutView.php');
         } else {
-            $message = Session::get('feedback');
-            require_once('./view/LoginView.php');
+            $view = 'LoginView.php';
+            require_once('./view/LayoutView.php');
         }
     }
 }
