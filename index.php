@@ -16,8 +16,15 @@ Session::start();
 // Routes
 switch ($controller) {
     case 'login':
+        Session::set('action', 'login');
         require_once('./controller/LoginController.php');
         $controller = new LoginController();
+        $controller->render();
+        break;
+    case 'register':
+        Session::set('action', 'register');
+        require_once('./controller/RegisterController.php');
+        $controller = new RegisterController();
         $controller->render();
         break;
     /*
