@@ -7,15 +7,6 @@ class LoginModel
     public static function login($username, $password) {
         Session::set('feedback', '');
 
-        if (isset($_POST['LoginView::Logout'])) {
-            Session::destroy();
-            $_POST = [];
-        }
-
-        if (!isset($_POST['LoginView::Login'])) {
-            return false;
-        }
-
         if (Session::get('isUserLoggedIn')) {
             return true;
         }
