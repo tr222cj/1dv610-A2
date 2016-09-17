@@ -22,7 +22,8 @@ class Session
      */
     public static function setOnce($key, $value) {
         $_SESSION[$key] = $value;
-        self::set('feedback-once', true);
+        //TODO: Should make this an array so that you can have more than one set-once values at the same time
+        self::set('set-once', $key);
     }
 
     /**
@@ -33,8 +34,8 @@ class Session
     public static function get($key) {
         $value = $_SESSION[$key];
 
-        if ($_SESSION['feedback-once']) {
-            self::delete('feedback-once');
+        if (isset($_SESSION['set-once']) && $_SESSION['set-once'] === $key) {
+            self::delete('set-once');
             self::delete($key);
         }
 

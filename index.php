@@ -26,10 +26,7 @@ switch ($controller) {
         require_once('./controller/RegisterController.php');
         $controller = new RegisterController();
         break;
-    /*
     default:
-        require_once('./controller/ErrorController.php');
-        $controller = new ErrorController();
+        echo 'To bad. You did something wrong :(';
         break;
-    */
 }
