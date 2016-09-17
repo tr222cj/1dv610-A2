@@ -2,6 +2,7 @@
 
 // Require logic
 require_once('./core/Session.php');
+require_once('./core/View.php');
 
 // Get controller from query string
 if (empty($_SERVER['QUERY_STRING'])) {
@@ -19,13 +20,11 @@ switch ($controller) {
         Session::set('action', 'login');
         require_once('./controller/LoginController.php');
         $controller = new LoginController();
-        $controller->render();
         break;
     case 'register':
         Session::set('action', 'register');
         require_once('./controller/RegisterController.php');
         $controller = new RegisterController();
-        $controller->render();
         break;
     /*
     default:

@@ -2,34 +2,50 @@
 
 require_once('./model/LoginModel.php');
 
+/**
+ * Class LoginController
+ */
 class LoginController {
 
+    /** @var View view */
+    private $view;
+
     /**
-     * Renders the current view
+     * LoginController constructor
+     * Creates a new controller and renders its views
      */
-    public function render() {
-        $username = $_POST['LoginView::UserName'];
-        $password = $_POST['LoginView::Password'];
-        $loginSuccess = false;
-        $message = '';
+    public function __construct() {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $this->view = new View();
+
+            $data = [
+                "message" => Session::get('feedback'),
+                "username" => Session::get('username'),
+            ];
+
+            if (Session::get('isUserLoggedIn')) {
+                $this->view->render('LogoutView', $data);
+            }
+
+            $this->view->render('LoginView', $data);
+        }
 
         if (isset($_POST['LoginView::Logout'])) {
-            (Session::get('isUserLoggedIn')) ? $message = 'Bye bye!' : '';
-            Session::destroy();
-            $_POST = [];
+            if (Session::get('isUserLoggedIn')) {
+                LoginModel::logout();
+            }
+
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit();
         }
 
         if (isset($_POST['LoginView::Login'])) {
-            $loginSuccess = LoginModel::login($username, $password);
-            $message = Session::get('feedback');
-        }
+            $username = $_POST['LoginView::UserName'];
+            $password = $_POST['LoginView::Password'];
+            LoginModel::login($username, $password);
 
-        if ($loginSuccess) {
-            $view = 'LogoutView.php';
-            require_once('./view/LayoutView.php');
-        } else {
-            $view = 'LoginView.php';
-            require_once('./view/LayoutView.php');
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit();
         }
     }
 }

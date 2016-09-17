@@ -1,20 +1,18 @@
 <?php
 
+/**
+ * Class UserModel
+ */
 class UserModel
 {
-    /**
-     * @access private
-     * @static static var
-     * @var array Dummy in-memory database
-     */
+    /** @var array Dummy in-memory database */
     private static $database = [
         "Admin" => "Password",
     ];
 
     /**
-     * @access public
-     * @static static method
-     * @param string $username username
+     * Gets user from database by username
+     * @param string $username Username
      * @return mixed A user or null if username does not exist
      * @throws Exception If username is empty
      */

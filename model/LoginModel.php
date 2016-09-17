@@ -2,10 +2,19 @@
 
 require_once('./model/UserModel.php');
 
-class LoginModel
-{
+/**
+ * Class LoginModel
+ */
+class LoginModel {
+
+    /**
+     * Tries to perform a login
+     * @param string $username
+     * @param string $password
+     * @return bool
+     */
     public static function login($username, $password) {
-        Session::set('feedback', '');
+        Session::set('username', $username);
 
         if (Session::get('isUserLoggedIn')) {
             return true;
@@ -24,6 +33,21 @@ class LoginModel
         return self::validateUser($username, $password);
     }
 
+    /**
+     * Logout current user
+     */
+    public static function logout() {
+        Session::destroy();
+        Session::start();
+        Session::setOnce('feedback', 'Bye bye!');
+    }
+
+    /**
+     * Validates user credentials
+     * @param string $username
+     * @param string $password
+     * @return bool
+     */
     private static function validateUser($username, $password) {
         $user = UserModel::getUser($username);
 
@@ -34,7 +58,7 @@ class LoginModel
 
         Session::set('user', $user);
         Session::set('isUserLoggedIn', true);
-        Session::set('feedback', 'Welcome');
+        Session::setOnce('feedback', 'Welcome');
         return true;
     }
 }

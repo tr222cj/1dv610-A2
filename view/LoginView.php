@@ -1,10 +1,10 @@
 <form method="post" >
     <fieldset>
         <legend>Login - enter Username and password</legend>
-        <p id="LoginView::Message"><?php echo $message; ?></p>
+        <p id="LoginView::Message"><?php echo $this->message; ?></p>
 
         <label for="LoginView::UserName">Username :</label>
-        <input type="text" id="LoginView::UserName" name="LoginView::UserName" value="<?php echo $username ?>" />
+        <input type="text" id="LoginView::UserName" name="LoginView::UserName" value="<?php echo $this->username ?>" />
 
         <label for="LoginView::Password">Password :</label>
         <input type="password" id="LoginView::Password" name="LoginView::Password" />

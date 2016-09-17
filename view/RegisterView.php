@@ -2,8 +2,8 @@
 
 <form action='?register' method='post' enctype='multipart/form-data'>
     <fieldset>
-    <legend>Register a new user - Write username and password</legend>
-        <p id='RegisterView::Message'><?php echo $message; ?></p>
+        <legend>Register a new user - Write username and password</legend>
+        <p id='RegisterView::Message'><?php echo $this->message; ?></p>
         <label for='RegisterView::UserName' >Username :</label>
         <input type='text' size='20' name='RegisterView::UserName' id='RegisterView::UserName' value='' />
         <br/>
