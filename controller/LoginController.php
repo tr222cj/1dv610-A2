@@ -19,8 +19,8 @@ class LoginController {
             $this->view = new View();
 
             $data = [
-                "message" => Session::get('feedback'),
-                "username" => Session::get('username'),
+                'message' => Session::get('feedback'),
+                'username' => Session::get('username'),
             ];
 
             if (Session::get('isUserLoggedIn')) {
@@ -35,7 +35,7 @@ class LoginController {
                 LoginModel::logout();
             }
 
-            header("Location: " . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
             exit();
         }
 
@@ -44,7 +44,7 @@ class LoginController {
             $password = $_POST['LoginView::Password'];
             LoginModel::login($username, $password);
 
-            header("Location: " . $_SERVER['REQUEST_URI']);
+            header('Location: ' . $_SERVER['REQUEST_URI']);
             exit();
         }
     }

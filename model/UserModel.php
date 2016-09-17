@@ -23,4 +23,13 @@ class UserModel
 
         return self::$database[$username];
     }
+
+    public static function registerUser($username, $password) {
+        try {
+            self::$database[$username] = $password;
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

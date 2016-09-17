@@ -23,6 +23,13 @@ class RegisterModel {
             $success = false;
         }
 
+        // Do this check BEFORE you send anything to the database
+        if ($username !== strip_tags($username)) {
+            Session::set('username-register', strip_tags($username));
+            $feedback .= 'Username contains invalid characters.<br>';
+            $success = false;
+        }
+
         if (!$success) {
             Session::set('feedback-register', $feedback);
             return false;
@@ -33,6 +40,18 @@ class RegisterModel {
             return false;
         }
 
-        return true;
+
+        if (UserModel::getUser($username)) {
+            Session::set('feedback-register', 'User exists, pick another username.');
+            return false;
+        }
+
+        if (UserModel::registerUser($username, $password)) {
+            Session::set('feedback', 'Registered new user.');
+            Session::set('username', $username);
+            return true;
+        }
+
+        return false;
     }
 }
