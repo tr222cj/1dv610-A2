@@ -46,13 +46,9 @@ class RegisterModel {
             return false;
         }
 
-        if (UserModel::registerUser($username, $password)) {
-            Session::set('feedback', 'Registered new user.');
-            Session::set('username', $username);
-            return true;
-        }
-
-        Session::set('feedback-register', 'Unknown error. :(');
-        return false;
+        UserModel::registerUser($username, $password);
+        Session::set('feedback', 'Registered new user.');
+        Session::set('username', $username);
+        return true;
     }
 }
