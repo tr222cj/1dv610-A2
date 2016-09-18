@@ -1,50 +1,63 @@
 # Login_1DV610
 Interface repository for 1DV610 assignment 2 and 4
 
-#PREPARE SERVER
+#TEST SERVER
+I used vagrant and the box `bento/ubuntu-16.04`.
+
+#PREPARE YOUR SERVER
 https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-in-ubuntu-16-04
 
 ## INSTALL PDO
-check phpinfo();
-If PDO is not installed, install it:
-sudo apt-get install php7.0-mysql
+check phpinfo();  
+If PDO is not installed, install it:  
+`sudo apt-get install php7.0-mysql`
 
 ## CONFIG
-Add APP_ENV to nginx:
-location / {
-    fastcgi_param APP_ENV production;
-}
+Add APP_ENV to nginx on your test server:  
+`location / {
+    fastcgi_param APP_ENV test;
+}`
 
 #CREATE DATABASE
-You must manually create a database: 
+You must manually create a database:  
 https://www.liquidweb.com/kb/create-a-mysql-database-on-linux-via-command-line/
 
-You must manually create a table user:
-mysql -u root -p
+`mysql -u [sql_user] -p`
 
+```sql
 CREATE DATABASE test_db; -- Give it any name, just make sure you set the name in config.
+```
 
+You must manually create a table user:
+
+```sql
 SHOW DATABASES;
+```
 
+```sql
 USE [name_of_database];
+```
 
+```sql
 CREATE TABLE AppUser (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username varchar(100),
     password varchar(100)
 );
+```
 
+```sql
 INSERT INTO AppUser (username, password)
 VALUES (PreDefinedUserName, PreDefinedPassword);
+```
 
 ##RESOURCES
 https://phpdelusions.net/pdo
 
 #MANUAL LABOUR
-You must manually copy existing/create new folder data/* with files after cloning this repo.
+You must manually copy existing/create new folder data/ with two files after cloning this repo: test.php & production.php
 
-test.php & production.php
-
+```php
 <?php
 
 return [
@@ -54,3 +67,4 @@ return [
     'pass' => 'Password',
     'charset' => 'utf8',
 ];
+```
