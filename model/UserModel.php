@@ -5,11 +5,6 @@
  */
 class UserModel
 {
-    /** @var array Dummy in-memory database */
-    private static $database = [
-        "Admin" => "Password",
-    ];
-
     /**
      * Gets user from database by username
      * @param string $username Username
@@ -21,15 +16,19 @@ class UserModel
             throw new \Exception('Username must not be empty');
         }
 
-        return self::$database[$username];
+        $database = Database::getDatabase();
+
+        if (isset($database[$username])) {
+            return $database[$username];
+        } else {
+            return null;
+        }
     }
 
     public static function registerUser($username, $password) {
-        try {
-            self::$database[$username] = $password;
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
+        $database = Database::getDatabase();
+        $database[$username] = $password;
+
+        return Database::saveDatabase($database);
     }
 }

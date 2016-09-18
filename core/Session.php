@@ -22,7 +22,7 @@ class Session
      */
     public static function setOnce($key, $value) {
         $_SESSION[$key] = $value;
-        //TODO: Should make this an array so that you can have more than one set-once values at the same time
+        //TODO: Should make this an array so that you can have more than one set-once key at the same time
         self::set('set-once', $key);
     }
 
@@ -32,14 +32,18 @@ class Session
      * @return mixed The contents of the session variable with name $key
      */
     public static function get($key) {
-        $value = $_SESSION[$key];
+        if (isset($_SESSION[$key])) {
+            $value = $_SESSION[$key];
 
-        if (isset($_SESSION['set-once']) && $_SESSION['set-once'] === $key) {
-            self::delete('set-once');
-            self::delete($key);
+            if (isset($_SESSION['set-once']) && $_SESSION['set-once'] === $key) {
+                self::delete('set-once');
+                self::delete($key);
+            }
+
+            return $value;
         }
 
-        return $value;
+        return '';
     }
 
     /**

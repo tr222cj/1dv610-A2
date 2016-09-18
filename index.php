@@ -1,8 +1,13 @@
 <?php
 
+//MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
+
 // Require logic
 require_once('./core/Session.php');
 require_once('./core/View.php');
+require_once('./core/Database.php');
 
 // Get controller from query string
 if (empty($_SERVER['QUERY_STRING'])) {

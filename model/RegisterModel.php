@@ -52,6 +52,7 @@ class RegisterModel {
             return true;
         }
 
+        Session::set('feedback-register', 'Unknown error. :(');
         return false;
     }
 }
