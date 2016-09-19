@@ -12,6 +12,7 @@ if (Config::isTestEnvironment()) {
 require_once('./core/Session.php');
 require_once('./core/View.php');
 require_once('./core/Database.php');
+require_once('./core/Tools.php');
 
 // Get controller from query string
 if (empty($_SERVER['QUERY_STRING'])) {

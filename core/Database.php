@@ -8,13 +8,11 @@
  *
  * Usage: $database = Database::getFactory()->getConnection();
  */
-class Database
-{
+class Database {
     private static $factory;
     private $database;
 
-    public static function getFactory()
-    {
+    public static function getFactory() {
         if (!self::$factory) {
             self::$factory = new Database();
         }
@@ -25,7 +23,7 @@ class Database
 
     public function getConnection() {
         $host = Config::getConfig('host');
-        $db   = Config::getConfig('db');
+        $db = Config::getConfig('db');
         $user = Config::getConfig('user');
         $pass = Config::getConfig('pass');
         $charset = Config::getConfig('charset');
@@ -33,15 +31,10 @@ class Database
         $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
         // http://php.net/manual/en/ref.pdo-mysql.php
-        $showExceptions = PDO::ERRMODE_SILENT;
-        if (Config::isTestEnvironment()) {
-            $showExceptions = PDO::ERRMODE_EXCEPTION;
-        }
-
         $opt = [
-            PDO::ATTR_ERRMODE            => $showExceptions,
+            PDO::ATTR_ERRMODE => Config::getConfig('exceptions'),
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES   => false,
+            PDO::ATTR_EMULATE_PREPARES => false,
         ];
 
         if (!$this->database) {

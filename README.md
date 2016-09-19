@@ -8,7 +8,12 @@ I used vagrant and the box `bento/ubuntu-16.04`.
 https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-in-ubuntu-16-04
 
 ## INSTALL PDO
-check phpinfo();  
+check phpinfo();
+```php
+<?php
+phpinfo();
+```
+
 If PDO is not installed, install it:  
 `sudo apt-get install php7.0-mysql`
 
@@ -55,16 +60,24 @@ VALUES (PreDefinedUserName, PreDefinedPassword);
 https://phpdelusions.net/pdo
 
 #MANUAL LABOUR
-You must manually copy existing/create new folder data/ with two files after cloning this repo: test.php & production.php
+You must manually copy existing/create new folder data/ with two files after cloning this repo: test.php & production.php  
+Can can also specify optional settings else defaults will be used:
 
 ```php
 <?php
 
 return [
-    'host' => 'IP#',
-    'db' => 'DatabaseName',
-    'user' => 'UserName',
-    'pass' => 'Password',
+    'host' => '127.0.0.1',
+    'db' => '1dv610_a2_login',
+    'user' => 'AppUser',
+    'pass' => 'Pass!Word',
     'charset' => 'utf8',
+    'exceptions' => PDO::ERRMODE_SILENT,
+    // Optional below
+    'hash-algo' => PASSWORD_BCRYPT,
+    'hash-options' => [
+        'cost' => 10,
+    ],
 ];
 ```
+

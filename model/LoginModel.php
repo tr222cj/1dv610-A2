@@ -51,7 +51,7 @@ class LoginModel {
     private static function validateUser($username, $password) {
         $user = UserModel::getUser($username);
 
-        if (!$user || $user !== $password) {
+        if (!$user || !Tools::verifyPassword($password, $user)) {
             Session::set('feedback', 'Wrong name or password');
             return false;
         }
