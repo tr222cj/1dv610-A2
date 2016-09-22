@@ -47,17 +47,19 @@ USE [name_of_database];
 CREATE TABLE AppUser (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username varchar(100),
-    password varchar(100)
+    password varchar(100),
+    token varchar(256)
 );
 ```
 
 ```sql
 INSERT INTO AppUser (username, password)
-VALUES (PreDefinedUserName, PreDefinedPassword);
+VALUES (PreDefinedUserName, PreDefinedHashedPassword);
 ```
 
 ##RESOURCES
 https://phpdelusions.net/pdo
+https://www.owasp.org/index.php/PHP_Security_Cheat_Sheet
 
 #MANUAL LABOUR
 You must manually copy existing/create new folder data/ with two files after cloning this repo: test.php & production.php  
@@ -80,4 +82,9 @@ return [
     ],
 ];
 ```
+
+#SECURITY
+Only use prepared statements: http://php.net/manual/en/pdo.prepare.php
+
+
 
