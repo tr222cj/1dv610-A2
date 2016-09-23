@@ -13,6 +13,7 @@ require_once('./core/Session.php');
 require_once('./core/View.php');
 require_once('./core/Database.php');
 require_once('./core/Tools.php');
+require_once('./core/Cookie.php');
 
 // Get controller from query string
 if (empty($_SERVER['QUERY_STRING'])) {

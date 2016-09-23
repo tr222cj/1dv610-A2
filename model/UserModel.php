@@ -10,7 +10,7 @@ class UserModel {
      * @return mixed A user or null if username does not exist
      * @throws Exception If username is empty
      */
-    public static function getUser($username) {
+    public static function getUserByUserName($username) {
         if (empty($username)) {
             throw new \Exception('Username must not be empty');
         }
@@ -18,11 +18,11 @@ class UserModel {
         $database = Database::getFactory()->getConnection();
 
         // BINARY forces the statement to be case sensitive
-        $sql = 'SELECT password FROM AppUser WHERE BINARY username = :username LIMIT 1';
+        $sql = 'SELECT * FROM AppUser WHERE BINARY username = :username LIMIT 1';
         $query = $database->prepare($sql);
         $query->execute([':username' => $username]);
 
-        return $query->fetch()['password'];
+        return $query->fetch();
     }
 
     /**
@@ -45,5 +45,22 @@ class UserModel {
         $sql = 'INSERT INTO AppUser (username, password) VALUES (:username, :password);';
         $query = $database->prepare($sql);
         $query->execute([':username' => $username, 'password' => Tools::hashPassword($password)]);
+    }
+
+    /**
+     * @param string $username
+     * @param string $token
+     * @throws Exception
+     */
+    public static function saveTokenByUserName($username, $token) {
+        if (empty($username)) {
+            throw new \Exception('Username must not be empty');
+        }
+
+        $database = Database::getFactory()->getConnection();
+
+        $sql = 'UPDATE AppUser SET token = :token WHERE username = :user_name;';
+        $query = $database->prepare($sql);
+        $query->execute([':token' => $token, ':user_name' => $username]);
     }
 }

@@ -18,6 +18,10 @@ class LoginController {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $this->view = new View();
 
+            if (!Session::isUserLoggedIn() && Cookie::isCookiesSet()) {
+                LoginModel::validateCookieLogin(Cookie::get('LoginView::CookieName'), Cookie::get('LoginView::CookiePassword'));
+            }
+
             $data = [
                 'message' => Session::get('feedback'),
                 'username' => Session::get('username'),
@@ -42,7 +46,8 @@ class LoginController {
         if (isset($_POST['LoginView::Login'])) {
             $username = $_POST['LoginView::UserName'];
             $password = $_POST['LoginView::Password'];
-            LoginModel::login($username, $password);
+            $remember = isset($_POST['LoginView::KeepMeLoggedIn']);
+            LoginModel::login($username, $password, $remember);
 
             header('Location: ' . $_SERVER['REQUEST_URI']);
             exit();

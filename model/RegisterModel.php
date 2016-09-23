@@ -8,6 +8,7 @@ require_once('./model/UserModel.php');
 class RegisterModel {
 
     public static function register($username, $password, $passwordRepeat) {
+        // Save the username up here so that we can input it into the form even if validation fails
         Session::set('username-register', $username);
 
         $feedback = '';
@@ -41,7 +42,7 @@ class RegisterModel {
         }
 
 
-        if (UserModel::getUser($username)) {
+        if (UserModel::getUserByUserName($username)) {
             Session::set('feedback-register', 'User exists, pick another username.');
             return false;
         }

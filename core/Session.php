@@ -4,8 +4,7 @@
  * Class Session
  * Gives easy access to some Session operations
  */
-class Session
-{
+class Session {
     /**
      * Sets a session variable
      * @param string $key The name of the key
@@ -43,7 +42,7 @@ class Session
             return $value;
         }
 
-        return '';
+        return null;
     }
 
     /**
@@ -70,5 +69,9 @@ class Session
         if (!isset($_SESSION)) {
             session_start();
         }
+    }
+
+    public static function isUserLoggedIn() {
+        return self::get('isUserLoggedIn');
     }
 }

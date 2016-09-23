@@ -11,9 +11,11 @@ class LoginModel {
      * Tries to perform a login
      * @param string $username
      * @param string $password
+     * @param bool $remember
      * @return bool
      */
-    public static function login($username, $password) {
+    public static function login($username, $password, $remember) {
+        // Save the username up here so that we can input it into the form even if validation fails
         Session::set('username', $username);
 
         if (Session::get('isUserLoggedIn')) {
@@ -30,16 +32,36 @@ class LoginModel {
             return false;
         }
 
-        return self::validateUser($username, $password);
+        if (self::validateUser($username, $password)) {
+            if ($remember) {
+                self::createTokenAndCookies($username);
+                Session::setOnce('feedback', 'Welcome and you will be remembered');
+            } else {
+                Session::setOnce('feedback', 'Welcome');
+            }
+
+            Session::set('isUserLoggedIn', true);
+            return true;
+        }
+
+        return false;
     }
 
     /**
      * Logout current user
+     * @param string $message
      */
-    public static function logout() {
+    public static function logout($message = '') {
+        if (Session::get('user')) {
+            UserModel::saveTokenByUserName(Session::get('user')['username'], null);
+        }
+
         Session::destroy();
         Session::start();
-        Session::setOnce('feedback', 'Bye bye!');
+        Session::setOnce('feedback', (empty($message) ? 'Bye bye!' : $message));
+
+        Cookie::delete('LoginView::CookieName');
+        Cookie::delete('LoginView::CookiePassword');
     }
 
     /**
@@ -49,9 +71,9 @@ class LoginModel {
      * @return bool
      */
     private static function validateUser($username, $password) {
-        $user = UserModel::getUser($username);
+        $user = UserModel::getUserByUserName($username);
 
-        if (!$user || !Tools::verifyPassword($password, $user)) {
+        if (!$user || !Tools::verifyPassword($password, $user['password'])) {
             Session::set('feedback', 'Wrong name or password');
             return false;
         }
@@ -60,5 +82,33 @@ class LoginModel {
         Session::set('isUserLoggedIn', true);
         Session::setOnce('feedback', 'Welcome');
         return true;
+    }
+
+    /**
+     * @param $username
+     */
+    private static function createTokenAndCookies($username) {
+        $token = Tools::generateToken();
+        UserModel::saveTokenByUserName($username, $token);
+
+        Cookie::set('LoginView::CookieName', $username);
+        Cookie::set('LoginView::CookiePassword', $token);
+    }
+
+    /**
+     * @param string $username
+     * @param string $token
+     * @return bool
+     */
+    public static function validateCookieLogin($username, $token) {
+        $user = UserModel::getUserByUserName($username);
+        Session::set('user', $user);
+
+        if ($user && $user['token'] === $token) {
+            Session::setOnce('feedback', 'Welcome back with cookie');
+            Session::set('isUserLoggedIn', true);
+        } else {
+            self::logout('Wrong information in cookies');
+        }
     }
 }

@@ -36,4 +36,8 @@ class Tools {
     public static function verifyPassword($password, $hash) {
         return password_verify($password, $hash);
     }
+
+    public static function generateToken() {
+        return bin2hex(random_bytes(128));
+    }
 }
