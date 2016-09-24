@@ -88,7 +88,7 @@ class LoginModel {
      * @param string $username
      */
     private static function createTokenAndCookies($username) {
-        $token = Tools::generateToken();
+        $token = Tools::generateCookieToken();
         UserModel::saveTokenByUserName($username, $token);
 
         Cookie::set('LoginView::CookieName', $username);

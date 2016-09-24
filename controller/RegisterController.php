@@ -20,22 +20,29 @@ class RegisterController {
             $data = [
                 'message' => Session::get('feedback-register'),
                 'username' => Session::get('username-register'),
+                'csrfToken' => Tools::generateCsrfToken(),
             ];
 
             $this->view->render('RegisterView', $data);
         }
 
         if (isset($_POST['RegisterView::Register'])) {
-            $username = $_POST['RegisterView::UserName'];
-            $password = $_POST['RegisterView::Password'];
-            $passwordRepeat = $_POST['RegisterView::PasswordRepeat'];
-            if (RegisterModel::register($username, $password, $passwordRepeat)) {
-                header('Location: ' . '/?');
-                exit();
+            $csrfToken = $_POST['RegisterView::CsrfToken'];
+
+            if (Tools::validateCsrfToken($csrfToken)) {
+                $username = $_POST['RegisterView::UserName'];
+                $password = $_POST['RegisterView::Password'];
+                $passwordRepeat = $_POST['RegisterView::PasswordRepeat'];
+                if (RegisterModel::register($username, $password, $passwordRepeat)) {
+                    header('Location: ' . '/?');
+                } else {
+                    header('Location: ' . $_SERVER['REQUEST_URI']);
+                }
             } else {
-                header('Location: ' . $_SERVER['REQUEST_URI']);
-                exit();
+                header('Location: ' . '?error');
             }
+
+            exit();
         }
     }
 }

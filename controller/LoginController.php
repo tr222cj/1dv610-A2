@@ -25,6 +25,7 @@ class LoginController {
             $data = [
                 'message' => Session::get('feedback'),
                 'username' => Session::get('username'),
+                'csrfToken' => Tools::generateCsrfToken(),
             ];
 
             if (Session::get('isUserLoggedIn')) {
@@ -35,21 +36,35 @@ class LoginController {
         }
 
         if (isset($_POST['LoginView::Logout'])) {
-            if (Session::get('isUserLoggedIn')) {
-                LoginModel::logout();
+            $csrfToken = $_POST['LoginView::CsrfToken'];
+
+            if (Tools::validateCsrfToken($csrfToken)) {
+                if (Session::isUserLoggedIn()) {
+                    LoginModel::logout();
+                }
+
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+            } else {
+                header('Location: ' . '?error');
             }
 
-            header('Location: ' . $_SERVER['REQUEST_URI']);
             exit();
         }
 
         if (isset($_POST['LoginView::Login'])) {
-            $username = $_POST['LoginView::UserName'];
-            $password = $_POST['LoginView::Password'];
-            $remember = isset($_POST['LoginView::KeepMeLoggedIn']);
-            LoginModel::login($username, $password, $remember);
+            $csrfToken = $_POST['LoginView::CsrfToken'];
 
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            if (Tools::validateCsrfToken($csrfToken)) {
+                $username = $_POST['LoginView::UserName'];
+                $password = $_POST['LoginView::Password'];
+                $remember = isset($_POST['LoginView::KeepMeLoggedIn']);
+                LoginModel::login($username, $password, $remember);
+
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+            } else {
+                header('Location: ' . '?error');
+            }
+
             exit();
         }
     }

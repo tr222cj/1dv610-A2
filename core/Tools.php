@@ -37,7 +37,28 @@ class Tools {
         return password_verify($password, $hash);
     }
 
-    public static function generateToken() {
+    /**
+     * @return string Token
+     */
+    public static function generateCookieToken() {
         return bin2hex(random_bytes(128));
+    }
+
+    /**
+     * @return string Token
+     */
+    public static function generateCsrfToken() {
+        $token = bin2hex(random_bytes(64));
+        Session::set('csrfToken', $token);
+
+        return $token;
+    }
+
+    /**
+     * @param string $token
+     * @return bool isValidToken
+     */
+    public static function validateCsrfToken($token) {
+        return $token === Session::get('csrfToken');
     }
 }
