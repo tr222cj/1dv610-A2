@@ -63,4 +63,21 @@ class UserModel {
         $query = $database->prepare($sql);
         $query->execute([':token' => $token, ':user_name' => $username]);
     }
+
+    /**
+     * @param string $username
+     * @param string $sessionId
+     * @throws Exception
+     */
+    public static function saveSessionIdByUserName($username, $sessionId) {
+        if (empty($username)) {
+            throw new \Exception('Username must not be empty');
+        }
+
+        $database = Database::getFactory()->getConnection();
+
+        $sql = 'UPDATE AppUser SET sessionId = :session_id WHERE username = :user_name;';
+        $query = $database->prepare($sql);
+        $query->execute([':session_id' => $sessionId, ':user_name' => $username]);
+    }
 }

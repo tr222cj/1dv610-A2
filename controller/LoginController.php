@@ -19,7 +19,7 @@ class LoginController {
             $this->view = new View();
 
             if (!Session::isUserLoggedIn() && Cookie::isCookiesSet()) {
-                LoginModel::validateCookieLogin(Cookie::get('LoginView::CookieName'), Cookie::get('LoginView::CookiePassword'));
+                LoginModel::isValidCookieLogin(Cookie::get('LoginView::CookieName'), Cookie::get('LoginView::CookiePassword'));
             }
 
             $data = [

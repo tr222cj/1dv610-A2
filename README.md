@@ -47,32 +47,31 @@ USE [name_of_database];
 CREATE TABLE AppUser (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username varchar(100),
-    password varchar(100)
+    password varchar(100),
+    token varchar(256),
+    sessionId varchar(50)
 );
 ```
 
-```sql
-INSERT INTO AppUser (username, password)
-VALUES (PreDefinedUserName, PreDefinedPassword);
-```
-
 ##RESOURCES
-https://phpdelusions.net/pdo
+https://phpdelusions.net/pdo  
+https://www.owasp.org/index.php/PHP_Security_Cheat_Sheet
 
 #MANUAL LABOUR
 You must manually copy existing/create new folder data/ with two files after cloning this repo: test.php & production.php  
-Can can also specify optional settings else defaults will be used:
+You can also specify optional settings else defaults will be used:
 
 ```php
 <?php
 
 return [
     'host' => '127.0.0.1',
-    'db' => '1dv610_a2_login',
-    'user' => 'AppUser',
-    'pass' => 'Pass!Word',
+    'db' => 'db_name',
+    'user' => 'user_name',
+    'pass' => 'password',
     'charset' => 'utf8',
     'exceptions' => PDO::ERRMODE_SILENT,
+    'secret' => "Shhhh! It's a secret",
     // Optional below
     'hash-algo' => PASSWORD_BCRYPT,
     'hash-options' => [

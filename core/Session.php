@@ -21,7 +21,7 @@ class Session {
      */
     public static function setOnce($key, $value) {
         $_SESSION[$key] = $value;
-        //TODO: Should make this an array so that you can have more than one set-once key at the same time
+        //TODO: Should probably make this into an array so that you can have more than one set-once keys at the same time
         self::set('set-once', $key);
     }
 
@@ -71,6 +71,9 @@ class Session {
         }
     }
 
+    /**
+     * @return mixed
+     */
     public static function isUserLoggedIn() {
         return self::get('isUserLoggedIn');
     }

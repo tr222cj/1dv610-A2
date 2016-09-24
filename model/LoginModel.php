@@ -36,11 +36,8 @@ class LoginModel {
             if ($remember) {
                 self::createTokenAndCookies($username);
                 Session::setOnce('feedback', 'Welcome and you will be remembered');
-            } else {
-                Session::setOnce('feedback', 'Welcome');
             }
 
-            Session::set('isUserLoggedIn', true);
             return true;
         }
 
@@ -54,6 +51,7 @@ class LoginModel {
     public static function logout($message = '') {
         if (Session::get('user')) {
             UserModel::saveTokenByUserName(Session::get('user')['username'], null);
+            UserModel::saveSessionIdByUserName(Session::get('user')['username'], null);
         }
 
         Session::destroy();
@@ -81,11 +79,13 @@ class LoginModel {
         Session::set('user', $user);
         Session::set('isUserLoggedIn', true);
         Session::setOnce('feedback', 'Welcome');
+        UserModel::saveSessionIdByUserName($username, session_id());
         return true;
     }
 
     /**
-     * @param $username
+     * Creates a token and necessary cookies for successful login via cookies
+     * @param string $username
      */
     private static function createTokenAndCookies($username) {
         $token = Tools::generateToken();
@@ -96,19 +96,22 @@ class LoginModel {
     }
 
     /**
+     * Validates cookies against stored information in the database
      * @param string $username
      * @param string $token
      * @return bool
      */
-    public static function validateCookieLogin($username, $token) {
+    public static function isValidCookieLogin($username, $token) {
         $user = UserModel::getUserByUserName($username);
         Session::set('user', $user);
 
         if ($user && $user['token'] === $token) {
             Session::setOnce('feedback', 'Welcome back with cookie');
             Session::set('isUserLoggedIn', true);
-        } else {
-            self::logout('Wrong information in cookies');
+            return true;
         }
+
+        self::logout('Wrong information in cookies');
+        return false;
     }
 }
