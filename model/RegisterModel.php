@@ -1,13 +1,17 @@
 <?php
+declare (strict_types = 1);
 
 require_once('./model/UserModel.php');
 
-/**
- * Class RegisterModel
- */
 class RegisterModel {
 
-    public static function register($username, $password, $passwordRepeat) {
+    /**
+     * @param string $username
+     * @param string $password
+     * @param string $passwordRepeat
+     * @return bool
+     */
+    public static function register(string $username, string $password, string $passwordRepeat) : bool {
         // Save the username up here so that we can input it into the form even if validation fails
         Session::set('username-register', $username);
 
@@ -47,7 +51,7 @@ class RegisterModel {
             return false;
         }
 
-        UserModel::registerUser($username, $password);
+        UserModel::registerNewUser($username, $password);
         Session::set('feedback', 'Registered new user.');
         Session::set('username', $username);
         return true;

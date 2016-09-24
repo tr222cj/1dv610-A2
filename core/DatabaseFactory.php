@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 
 /**
  * Class Database
@@ -6,22 +7,28 @@
  * This is a somewhat modified version of the answer here:
  * http://stackoverflow.com/questions/130878/global-or-singleton-for-database-connection
  *
- * Usage: $database = Database::getFactory()->getConnection();
+ * Usage: $database = DatabaseFactory::getFactory()->getConnection();
  */
-class Database {
+class DatabaseFactory {
+
     private static $factory;
     private $database;
 
-    public static function getFactory() {
+    /**
+     * @return DatabaseFactory
+     */
+    public static function getFactory() : DatabaseFactory {
         if (!self::$factory) {
-            self::$factory = new Database();
+            self::$factory = new DatabaseFactory();
         }
 
         return self::$factory;
     }
 
-
-    public function getConnection() {
+    /**
+     * @return PDO
+     */
+    public function getConnection() : PDO {
         $host = Config::getConfig('host');
         $db = Config::getConfig('db');
         $user = Config::getConfig('user');

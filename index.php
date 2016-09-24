@@ -1,5 +1,6 @@
 <?php
 
+// Have to include this before everything else
 require_once('./core/Config.php');
 
 //MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
@@ -11,7 +12,7 @@ if (Config::isTestEnvironment()) {
 // Require logic
 require_once('./core/Session.php');
 require_once('./core/View.php');
-require_once('./core/Database.php');
+require_once('./core/DatabaseFactory.php');
 require_once('./core/Tools.php');
 require_once('./core/Cookie.php');
 

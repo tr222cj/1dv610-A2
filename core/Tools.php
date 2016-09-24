@@ -1,17 +1,13 @@
 <?php
+declare (strict_types = 1);
 
-/**
- * Class Tools
- * A collection of useful tools
- */
 class Tools {
 
     /**
-     * Hash and salt a password
      * @param string $password
-     * @return string Hashed and salted password
+     * @return string
      */
-    public static function hashPassword($password) {
+    public static function hashPassword(string $password) : string {
         $hashAlgo = Config::getConfig('hash-algo');
         if (!$hashAlgo) {
             $hashAlgo = PASSWORD_DEFAULT;
@@ -28,16 +24,18 @@ class Tools {
     }
 
     /**
-     * Verify supplied password against hash
      * @param string $password
      * @param string $hash
      * @return bool
      */
-    public static function verifyPassword($password, $hash) {
+    public static function verifyPassword(string $password, string $hash) : bool {
         return password_verify($password, $hash);
     }
 
-    public static function generateToken() {
+    /**
+     * @return string
+     */
+    public static function generateToken() : string {
         return bin2hex(random_bytes(128));
     }
 }

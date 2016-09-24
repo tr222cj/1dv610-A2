@@ -1,14 +1,22 @@
 <?php
+declare (strict_types = 1);
 
 class Config {
 
     private static $config;
 
-    public static function isTestEnvironment() {
+    /**
+     * @return bool
+     */
+    public static function isTestEnvironment() : bool {
         return getenv('APP_ENV') === 'test';
     }
 
-    public static function getConfig($name) {
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public static function getConfig(string $key) {
         // Could not use require_once since that returns TRUE if the file is already loaded.
         // Instead I check if $config is set and if not then require the files.
         if (!self::$config) {
@@ -19,8 +27,8 @@ class Config {
             }
         }
 
-        if (array_key_exists($name, self::$config)) {
-            return self::$config[$name];
+        if (array_key_exists($key, self::$config)) {
+            return self::$config[$key];
         }
 
         return null;

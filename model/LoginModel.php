@@ -1,24 +1,22 @@
 <?php
+declare (strict_types = 1);
 
 require_once('./model/UserModel.php');
 
-/**
- * Class LoginModel
- */
 class LoginModel {
 
     /**
-     * Tries to perform a login
+     * Try to perform a login
      * @param string $username
      * @param string $password
      * @param bool $remember
      * @return bool
      */
-    public static function login($username, $password, $remember) {
+    public static function login(string $username, string $password, bool $remember) : bool {
         // Save the username up here so that we can input it into the form even if validation fails
         Session::set('username', $username);
 
-        if (Session::get('isUserLoggedIn')) {
+        if (Session::isUserLoggedIn()) {
             return true;
         }
 
@@ -45,13 +43,14 @@ class LoginModel {
     }
 
     /**
-     * Logout current user
-     * @param string $message
+     * Perform Logout of current user
+     * @param string $message The message to display instead of standard Bye bye!
      */
-    public static function logout($message = '') {
+    public static function logout(string $message = '') {
+        // Clear stored token and sessionId on logout
         if (Session::get('user')) {
-            UserModel::saveTokenByUserName(Session::get('user')['username'], null);
-            UserModel::saveSessionIdByUserName(Session::get('user')['username'], null);
+            UserModel::saveTokenByUserName(Session::get('user')['username'], '');
+            UserModel::saveSessionIdByUserName(Session::get('user')['username'], '');
         }
 
         Session::destroy();
@@ -68,7 +67,7 @@ class LoginModel {
      * @param string $password
      * @return bool
      */
-    private static function validateUser($username, $password) {
+    private static function validateUser(string $username, string $password) : bool {
         $user = UserModel::getUserByUserName($username);
 
         if (!$user || !Tools::verifyPassword($password, $user['password'])) {
@@ -87,7 +86,7 @@ class LoginModel {
      * Creates a token and necessary cookies for successful login via cookies
      * @param string $username
      */
-    private static function createTokenAndCookies($username) {
+    private static function createTokenAndCookies(string $username) {
         $token = Tools::generateToken();
         UserModel::saveTokenByUserName($username, $token);
 
@@ -101,7 +100,7 @@ class LoginModel {
      * @param string $token
      * @return bool
      */
-    public static function isValidCookieLogin($username, $token) {
+    public static function validateCookieLogin(string $username, string $token) : bool {
         $user = UserModel::getUserByUserName($username);
         Session::set('user', $user);
 

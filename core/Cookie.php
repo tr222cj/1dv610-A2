@@ -1,14 +1,12 @@
 <?php
+declare (strict_types = 1);
 
-/**
- * Class Cookie
- */
 class Cookie {
 
     /**
      * @return bool
      */
-    public static function isCookiesSet() {
+    public static function isCookiesSet() : bool {
         $cookieName = self::get('LoginView::CookieName');
         $cookiePassword = self::get('LoginView::CookiePassword');
 
@@ -21,9 +19,9 @@ class Cookie {
 
     /**
      * @param string $key
-     * @return mixed Contents of cookie or null
+     * @return mixed
      */
-    public static function get($key) {
+    public static function get(string $key) {
         if (isset($_COOKIE[$key])) {
             return $_COOKIE[$key];
         }
@@ -35,17 +33,17 @@ class Cookie {
      * @param string $key
      * @param string $value
      */
-    public static function set($key, $value) {
+    public static function set(string $key, string $value) {
         setcookie($key, $value, time() + 3600 * 24 * 7);
     }
 
     /**
      * @param string $key
      */
-    public static function delete($key) {
+    public static function delete(string $key) {
         if (isset($_COOKIE[$key])) {
             unset($_COOKIE[$key]);
-            setcookie($key, null, time() - 3600);
+            setcookie($key, '', time() - 3600, '/', $_SERVER['SERVER_NAME'], false, true);
         }
     }
 }
