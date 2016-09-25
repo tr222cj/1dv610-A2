@@ -1,19 +1,19 @@
 <?php
 
+namespace controller;
+
 require_once('./model/LoginModel.php');
 
-/**
- * Class LoginController
- */
+use \View;
+use \Session;
+use \Cookie;
+use \model\LoginModel;
+
 class LoginController {
 
     /** @var View view */
     private $view;
 
-    /**
-     * LoginController constructor
-     * Creates a new controller and renders its views
-     */
     public function __construct() {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $this->view = new View();

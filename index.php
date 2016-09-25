@@ -31,12 +31,12 @@ switch ($controller) {
     case 'login':
         Session::set('action', 'login');
         require_once('./controller/LoginController.php');
-        $controller = new LoginController();
+        $controller = new \controller\LoginController();
         break;
     case 'register':
         Session::set('action', 'register');
         require_once('./controller/RegisterController.php');
-        $controller = new RegisterController();
+        $controller = new \controller\RegisterController();
         break;
     default:
         echo 'To bad. You did something wrong :(';

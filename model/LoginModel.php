@@ -1,12 +1,17 @@
 <?php
 declare (strict_types = 1);
 
+namespace model;
+
 require_once('./model/UserModel.php');
+
+use \Session;
+use \Tools;
+use \Cookie;
 
 class LoginModel {
 
     /**
-     * Try to perform a login
      * @param string $username
      * @param string $password
      * @param bool $remember
@@ -30,7 +35,7 @@ class LoginModel {
             return false;
         }
 
-        if (self::validateUser($username, $password)) {
+        if (self::validateUserCredentials($username, $password)) {
             if ($remember) {
                 self::createTokenAndCookies($username);
                 Session::setOnce('feedback', 'Welcome and you will be remembered');
@@ -43,8 +48,7 @@ class LoginModel {
     }
 
     /**
-     * Perform Logout of current user
-     * @param string $message The message to display instead of standard Bye bye!
+     * @param string $message The message to be displayed instead of default 'Bye bye!'
      */
     public static function logout(string $message = '') {
         // Clear stored token and sessionId on logout
@@ -62,12 +66,11 @@ class LoginModel {
     }
 
     /**
-     * Validates user credentials
      * @param string $username
      * @param string $password
      * @return bool
      */
-    private static function validateUser(string $username, string $password) : bool {
+    private static function validateUserCredentials(string $username, string $password) : bool {
         $user = UserModel::getUserByUserName($username);
 
         if (!$user || !Tools::verifyPassword($password, $user['password'])) {

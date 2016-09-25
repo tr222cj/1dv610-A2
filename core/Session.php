@@ -8,6 +8,11 @@ class Session {
      * @param mixed $value
      */
     public static function set(string $key, $value) {
+        // XSS Filter but not for feedbacks since they will never contain user input
+        if (is_string($value) && strpos($key, 'feedback') === false) {
+            $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+        }
+
         $_SESSION[$key] = $value;
     }
 

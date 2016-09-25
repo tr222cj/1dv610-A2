@@ -1,10 +1,17 @@
 <?php
 declare (strict_types = 1);
 
+namespace controller;
+
 require_once('./model/RegisterModel.php');
+
+use \View;
+use \Session;
+use \model\RegisterModel;
 
 class RegisterController {
 
+    /** @var View view */
     private $view;
 
     public function __construct() {
