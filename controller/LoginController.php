@@ -18,17 +18,25 @@ class LoginController {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $this->view = new View();
 
-            if (!Session::isUserLoggedIn() && Cookie::isCookiesSet()) {
-                LoginModel::validateCookieLogin(Cookie::get('LoginView::CookieName'), Cookie::get('LoginView::CookiePassword'));
-            }
-
             $data = [
-                'message' => Session::get('feedback'),
-                'username' => Session::get('username'),
+                'message' => '',
+                'username' => '',
             ];
 
-            if (Session::get('isUserLoggedIn')) {
-                $this->view->render('LogoutView', $data);
+            //Check for concurrent sessions and session hijacking BEFORE anything else
+            if (!(Session::isUserLoggedIn() && LoginModel::checkIfConcurrentSessionExists())) {
+                if (!Session::isUserLoggedIn() && Cookie::isCookiesSet()) {
+                    LoginModel::validateCookieLogin(Cookie::get('LoginView::CookieName'), Cookie::get('LoginView::CookiePassword'));
+                }
+
+                $data = [
+                    'message' => Session::get('feedback'),
+                    'username' => Session::get('username'),
+                ];
+
+                if (Session::get('isUserLoggedIn')) {
+                    $this->view->render('LogoutView', $data);
+                }
             }
 
             $this->view->render('LoginView', $data);

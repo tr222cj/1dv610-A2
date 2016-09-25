@@ -87,4 +87,32 @@ class UserModel {
         $query = $database->prepare($sql);
         $query->execute([':session_id' => $sessionId, ':user_name' => $username]);
     }
+
+    public static function saveIpAdressByUserName(string $username, string $ipAdress) {
+        if (empty($username)) {
+            throw new \Exception('Username must not be empty');
+        }
+
+        $ipAdress = empty($ipAdress) ? null : $ipAdress;
+
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $sql = 'UPDATE AppUser SET ip = :ip_adress WHERE username = :user_name;';
+        $query = $database->prepare($sql);
+        $query->execute([':ip_adress' => $ipAdress, ':user_name' => $username]);
+    }
+
+    public static function saveBrowserInfoByUserName(string $username, string $browser) {
+        if (empty($username)) {
+            throw new \Exception('Username must not be empty');
+        }
+
+        $browser = empty($browser) ? null : $browser;
+
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $sql = 'UPDATE AppUser SET browser = :browser WHERE username = :user_name;';
+        $query = $database->prepare($sql);
+        $query->execute([':browser' => $browser, ':user_name' => $username]);
+    }
 }
