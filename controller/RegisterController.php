@@ -16,6 +16,11 @@ class RegisterController {
 
     public function __construct() {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if (Session::isUserLoggedIn()) {
+                header('Location: ' . '/?');
+                exit();
+            }
+
             $this->view = new View();
 
             $data = [
