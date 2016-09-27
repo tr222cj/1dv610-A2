@@ -53,38 +53,58 @@ class UserModel {
     /**
      * @param string $username
      * @param string $token
-     * @throws Exception
      */
     public static function saveTokenByUserName(string $username, string $token) {
-        if (empty($username)) {
-            throw new \Exception('Username must not be empty');
-        }
-
-        $token = empty($token) ? null : $token;
-
-        $database = DatabaseFactory::getFactory()->getConnection();
-
-        $sql = 'UPDATE AppUser SET token = :token WHERE username = :user_name;';
-        $query = $database->prepare($sql);
-        $query->execute([':token' => $token, ':user_name' => $username]);
+        self::saveDataToDatabase($username, $token, "token");
     }
 
     /**
      * @param string $username
      * @param string $sessionId
-     * @throws Exception
      */
     public static function saveSessionIdByUserName(string $username, string $sessionId) {
+        self::saveDataToDatabase($username, $sessionId, "sessionId");
+    }
+
+    /**
+     * @param string $username
+     * @param string $ipAddress
+     */
+    public static function saveIpAdressByUserName(string $username, string $ipAddress) {
+        self::saveDataToDatabase($username, $ipAddress, "ip");
+    }
+
+    /**
+     * @param string $username
+     * @param string $browser
+     */
+    public static function saveBrowserInfoByUserName(string $username, string $browser) {
+        self::saveDataToDatabase($username, $browser, "browser");
+    }
+
+    /**
+     * @param string $username
+     * @param string $data
+     * @param string $columnName
+     * @throws Exception
+     */
+    private static function saveDataToDatabase(string $username, string $data, string $columnName) {
         if (empty($username)) {
             throw new \Exception('Username must not be empty');
         }
 
-        $sessionId = empty($sessionId) ? null : $sessionId;
+        $validColumnNames = ['sessionId', 'token', 'ip', 'browser'];
 
-        $database = DatabaseFactory::getFactory()->getConnection();
+        if (in_array($columnName, $validColumnNames)) {
+            $data = empty($data) ? null : $data;
 
-        $sql = 'UPDATE AppUser SET sessionId = :session_id WHERE username = :user_name;';
-        $query = $database->prepare($sql);
-        $query->execute([':session_id' => $sessionId, ':user_name' => $username]);
+            $database = DatabaseFactory::getFactory()->getConnection();
+
+            $sql = 'UPDATE AppUser SET ' . $columnName . ' = :data WHERE username = :user_name;';
+            $query = $database->prepare($sql);
+            $query->execute([':data' => $data, ':user_name' => $username]);
+        } else {
+            throw new \Exception('Invalid columnName');
+        }
     }
 }

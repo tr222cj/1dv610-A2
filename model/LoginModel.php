@@ -51,10 +51,12 @@ class LoginModel {
      * @param string $message The message to be displayed instead of default 'Bye bye!'
      */
     public static function logout(string $message = '') {
-        // Clear stored token and sessionId on logout
+        // Clear stored session data in database on logout
         if (Session::get('user')) {
             UserModel::saveTokenByUserName(Session::get('user')['username'], '');
             UserModel::saveSessionIdByUserName(Session::get('user')['username'], '');
+            UserModel::saveIpAdressByUserName(Session::get('user')['username'], '');
+            UserModel::saveBrowserInfoByUserName(Session::get('user')['username'], '');
         }
 
         Session::destroy();
@@ -82,6 +84,9 @@ class LoginModel {
         Session::set('isUserLoggedIn', true);
         Session::setOnce('feedback', 'Welcome');
         UserModel::saveSessionIdByUserName($username, session_id());
+        UserModel::saveIpAdressByUserName($username, $_SERVER['REMOTE_ADDR']);
+        UserModel::saveBrowserInfoByUserName($username, $_SERVER['HTTP_USER_AGENT']);
+
         return true;
     }
 
@@ -114,6 +119,25 @@ class LoginModel {
         }
 
         self::logout('Wrong information in cookies');
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function checkIfConcurrentSessionExists() : bool {
+        $newUserIpAddress = $_SERVER['REMOTE_ADDR'];
+        $newUserBrowser = $_SERVER['HTTP_USER_AGENT'];
+        $newUserSessionId = session_id();
+
+        $existingUser = UserModel::getUserByUserName(Session::get('user')['username']);
+
+        if ($newUserSessionId === $existingUser['sessionId'] && ($newUserBrowser !== $existingUser['browser'] || $newUserIpAddress !== $existingUser['ip'])) {
+            session_regenerate_id(false);
+            Session::destroy();
+            return true;
+        }
+
         return false;
     }
 }
