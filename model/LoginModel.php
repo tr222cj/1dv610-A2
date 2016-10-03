@@ -101,43 +101,4 @@ class LoginModel {
         Cookie::set('LoginView::CookieName', $username);
         Cookie::set('LoginView::CookiePassword', $token);
     }
-
-    /**
-     * Validates cookies against stored information in the database
-     * @param string $username
-     * @param string $token
-     * @return bool
-     */
-    public static function validateCookieLogin(string $username, string $token) : bool {
-        $user = UserModel::getUserByUserName($username);
-        Session::set('user', $user);
-
-        if ($user && $user['token'] === $token) {
-            Session::setOnce('feedback', 'Welcome back with cookie');
-            Session::set('isUserLoggedIn', true);
-            return true;
-        }
-
-        self::logout('Wrong information in cookies');
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public static function checkIfConcurrentSessionExists() : bool {
-        $newUserIpAddress = $_SERVER['REMOTE_ADDR'];
-        $newUserBrowser = $_SERVER['HTTP_USER_AGENT'];
-        $newUserSessionId = session_id();
-
-        $existingUser = UserModel::getUserByUserName(Session::get('user')['username']);
-
-        if ($newUserSessionId === $existingUser['sessionId'] && ($newUserBrowser !== $existingUser['browser'] || $newUserIpAddress !== $existingUser['ip'])) {
-            session_regenerate_id(false);
-            Session::destroy();
-            return true;
-        }
-
-        return false;
-    }
 }

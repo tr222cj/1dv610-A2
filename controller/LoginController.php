@@ -1,44 +1,37 @@
 <?php
+declare (strict_types = 1);
 
 namespace controller;
 
 require_once('./model/LoginModel.php');
 
+use core\Controller;
 use core\Cookie;
-use model\LoginModel;
 use core\Session;
-use core\View;
+use model\LoginModel;
 
-class LoginController {
-
-    /** @var View view */
-    private $view;
+class LoginController extends Controller {
 
     public function __construct() {
+        parent::__construct();
+    }
+
+    public function init() {
+        Session::set('action', 'login');
+
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $this->view = new View();
+            Cookie::tryLoginByCookies();
 
             $data = [
-                'message' => '',
-                'username' => '',
+                'message' => Session::get('feedback'),
+                'username' => Session::get('username'),
             ];
 
-            if (!(Session::isUserLoggedIn() && LoginModel::checkIfConcurrentSessionExists())) {
-                if (!Session::isUserLoggedIn() && Cookie::isCookiesSet()) {
-                    LoginModel::validateCookieLogin(Cookie::get('LoginView::CookieName'), Cookie::get('LoginView::CookiePassword'));
-                }
-
-                $data = [
-                    'message' => Session::get('feedback'),
-                    'username' => Session::get('username'),
-                ];
-
-                if (Session::get('isUserLoggedIn')) {
-                    $this->view->render('LogoutView', $data);
-                }
+            if (Session::get('isUserLoggedIn')) {
+                $this->view->render('/login/logout', $data);
+            } else {
+                $this->view->render('/login/index', $data);
             }
-
-            $this->view->render('LoginView', $data);
         }
 
         if (isset($_POST['LoginView::Logout'])) {

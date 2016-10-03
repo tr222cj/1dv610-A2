@@ -5,30 +5,31 @@ namespace controller;
 
 require_once('./model/RegisterModel.php');
 
+use core\Controller;
 use core\Session;
-use core\View;
 use model\RegisterModel;
 
-class RegisterController {
-
-    /** @var View view */
-    private $view;
+class RegisterController extends Controller {
 
     public function __construct() {
+        parent::__construct();
+    }
+
+    public function init() {
+        Session::set('action', 'register');
+
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (Session::isUserLoggedIn()) {
-                header('Location: ' . '/?');
+                header('Location: ' . '/');
                 exit();
             }
-
-            $this->view = new View();
 
             $data = [
                 'message' => Session::get('feedback-register'),
                 'username' => Session::get('username-register'),
             ];
 
-            $this->view->render('RegisterView', $data);
+            $this->view->render('/register/index', $data);
         }
 
         if (isset($_POST['RegisterView::Register'])) {

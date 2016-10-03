@@ -3,12 +3,32 @@ declare (strict_types = 1);
 
 namespace core;
 
+use model\UserModel;
+
 final class Cookie {
+
+    public static function tryLoginByCookies() {
+        if (!Session::isUserLoggedIn() && self::isCookiesSet()) {
+            $username = self::get('LoginView::CookieName');
+            $token = self::get('LoginView::CookiePassword');
+
+            $user = UserModel::getUserByUserName($username);
+
+            if ($user && $user['token'] === $token) {
+                Session::setOnce('feedback', 'Welcome back with cookie');
+                Session::set('isUserLoggedIn', true);
+                Session::set('user', $user);
+            } else {
+                self::delete('LoginView::CookieName');
+                self::delete('LoginView::CookiePassword');
+            }
+        }
+    }
 
     /**
      * @return bool
      */
-    public static function isCookiesSet() : bool {
+    private static function isCookiesSet() : bool {
         $cookieName = self::get('LoginView::CookieName');
         $cookiePassword = self::get('LoginView::CookiePassword');
 

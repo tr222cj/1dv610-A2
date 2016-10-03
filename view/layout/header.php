@@ -18,9 +18,3 @@
 } ?>
 
 <div class="container">
-    <?php require_once($view); ?>
-
-    <?php require_once('DateTimeView.php'); ?>
-</div>
-</body>
-</html>

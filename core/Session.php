@@ -5,6 +5,36 @@ namespace core;
 
 final class Session {
 
+    public static function destroy() {
+        session_regenerate_id(false);
+        unset($_SESSION);
+        session_destroy();
+    }
+
+    public static function start() {
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     */
+    public static function setOnce(string $key, $value) {
+        $_SESSION[$key] = $value;
+        //TODO: Should probably make this into an array so that you can have more than one set-once keys at the same time
+        self::set('set-once', $key);
+    }
+
+    /**
+     * @param string $key
+     */
+    public static function delete(string $key) {
+        self::set('$key', null);
+        unset($_SESSION[$key]);
+    }
+
     /**
      * @param string $key
      * @param mixed $value
@@ -19,13 +49,11 @@ final class Session {
     }
 
     /**
-     * @param string $key
-     * @param mixed $value
+     * @return bool
      */
-    public static function setOnce(string $key, $value) {
-        $_SESSION[$key] = $value;
-        //TODO: Should probably make this into an array so that you can have more than one set-once keys at the same time
-        self::set('set-once', $key);
+    public static function isUserLoggedIn() : bool {
+        $isUserLoggedIn = self::get('isUserLoggedIn');
+        return isset($isUserLoggedIn) ? $isUserLoggedIn : false;
     }
 
     /**
@@ -48,35 +76,26 @@ final class Session {
     }
 
     /**
-     * @param string $key
-     */
-    public static function delete(string $key) {
-        self::set('$key', null);
-        unset($_SESSION[$key]);
-    }
-
-    /**
-     *
-     */
-    public static function destroy() {
-        unset($_SESSION);
-        session_destroy();
-    }
-
-    /**
-     *
-     */
-    public static function start() {
-        if (!isset($_SESSION)) {
-            session_start();
-        }
-    }
-
-    /**
      * @return bool
      */
-    public static function isUserLoggedIn() : bool {
-        $isUserLoggedIn = self::get('isUserLoggedIn');
-        return isset($isUserLoggedIn) ? $isUserLoggedIn : false;
+    public static function isConcurrentSession() : bool {
+        $newUserIpAddress = $_SERVER['REMOTE_ADDR'];
+        $newUserBrowser = $_SERVER['HTTP_USER_AGENT'];
+        $newUserSessionId = session_id();
+
+        $database = DatabaseFactory::getFactory()->getConnection();
+
+        $sql = "SELECT sessionId, browser, ip FROM AppUser WHERE sessionId = :session_id LIMIT 1";
+
+        $query = $database->prepare($sql);
+        $query->execute(array(":session_id" => $newUserSessionId));
+
+        $existingUser = $query->fetch();
+
+        if ($newUserSessionId === $existingUser['sessionId'] && ($newUserBrowser !== $existingUser['browser'] || $newUserIpAddress !== $existingUser['ip'])) {
+            return true;
+        }
+
+        return false;
     }
 }

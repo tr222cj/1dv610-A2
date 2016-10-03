@@ -16,4 +16,6 @@ abstract class Setting {
     ];
 
     const COOKIE_SECRET = 'Shhhhhhh! It\'s a secret';
+
+    const TIMEZONE = "Europe/Stockholm";
 }
