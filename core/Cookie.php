@@ -1,7 +1,9 @@
 <?php
 declare (strict_types = 1);
 
-class Cookie {
+namespace core;
+
+final class Cookie {
 
     /**
      * @return bool

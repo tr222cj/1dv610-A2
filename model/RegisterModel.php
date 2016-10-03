@@ -5,7 +5,7 @@ namespace model;
 
 require_once('./model/UserModel.php');
 
-use \Session;
+use core\Session;
 
 class RegisterModel {
 

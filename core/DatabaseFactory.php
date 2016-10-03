@@ -1,6 +1,10 @@
 <?php
 declare (strict_types = 1);
 
+namespace core;
+
+use settings\Setting;
+
 /**
  * Class Database
  *
@@ -9,7 +13,7 @@ declare (strict_types = 1);
  *
  * Usage: $database = DatabaseFactory::getFactory()->getConnection();
  */
-class DatabaseFactory {
+final class DatabaseFactory {
 
     private static $factory;
     private $database;
@@ -26,26 +30,26 @@ class DatabaseFactory {
     }
 
     /**
-     * @return PDO
+     * @return \PDO
      */
-    public function getConnection() : PDO {
-        $host = Config::getConfig('host');
-        $db = Config::getConfig('db');
-        $user = Config::getConfig('user');
-        $pass = Config::getConfig('pass');
-        $charset = Config::getConfig('charset');
+    public function getConnection() : \PDO {
+        $host = Setting::DB_HOST;
+        $db = Setting::DB_NAME;
+        $user = Setting::DB_USER;
+        $pass = Setting::DB_PASSWORD;
+        $charset = Setting::DB_CHARSET;
 
         $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
         // http://php.net/manual/en/ref.pdo-mysql.php
         $opt = [
-            PDO::ATTR_ERRMODE => Config::getConfig('exceptions'),
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
+            \PDO::ATTR_ERRMODE => Setting::DB_ERROR_MODE,
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+            \PDO::ATTR_EMULATE_PREPARES => false,
         ];
 
         if (!$this->database) {
-            $this->database = new PDO($dsn, $user, $pass, $opt);
+            $this->database = new \PDO($dsn, $user, $pass, $opt);
         }
 
         return $this->database;

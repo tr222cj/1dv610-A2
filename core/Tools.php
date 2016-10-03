@@ -1,26 +1,21 @@
 <?php
 declare (strict_types = 1);
 
-class Tools {
+namespace core;
+
+use settings\Setting;
+
+final class Tools {
 
     /**
      * @param string $password
      * @return string
      */
     public static function hashPassword(string $password) : string {
-        $hashAlgo = Config::getConfig('hash-algo');
-        if (!$hashAlgo) {
-            $hashAlgo = PASSWORD_DEFAULT;
-        }
+        $hashAlgorithm = Setting::HASH_ALGORITHM;
+        $hashOptions = Setting::HASH_OPTIONS;
 
-        $hashOptions = Config::getConfig('hash-options');
-        if (!$hashOptions) {
-            $hashOptions = [
-                'cost' => 10,
-            ];
-        }
-
-        return password_hash($password, $hashAlgo, $hashOptions);
+        return password_hash($password, $hashAlgorithm, $hashOptions);
     }
 
     /**

@@ -4,10 +4,10 @@ namespace controller;
 
 require_once('./model/LoginModel.php');
 
-use \View;
-use \Session;
-use \Cookie;
-use \model\LoginModel;
+use core\Cookie;
+use model\LoginModel;
+use core\Session;
+use core\View;
 
 class LoginController {
 

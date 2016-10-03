@@ -49,7 +49,9 @@ CREATE TABLE AppUser (
     username varchar(100),
     password varchar(100),
     token varchar(256),
-    sessionId varchar(50)
+    sessionId varchar(50),
+    ip varchar(50),
+    browser varchar(512)
 );
 ```
 
@@ -58,25 +60,5 @@ https://phpdelusions.net/pdo
 https://www.owasp.org/index.php/PHP_Security_Cheat_Sheet
 
 #MANUAL LABOUR
-You must manually copy existing/create new folder data/ with two files after cloning this repo: test.php & production.php  
-You can also specify optional settings else defaults will be used:
-
-```php
-<?php
-
-return [
-    'host' => '127.0.0.1',
-    'db' => 'db_name',
-    'user' => 'user_name',
-    'pass' => 'password',
-    'charset' => 'utf8',
-    'exceptions' => PDO::ERRMODE_SILENT,
-    'secret' => "Shhhh! It's a secret",
-    // Optional below
-    'hash-algo' => PASSWORD_BCRYPT,
-    'hash-options' => [
-        'cost' => 10,
-    ],
-];
-```
-
+You must manually create setting Setting.prod.php after cloning this repo. See Setting.test.php information
+about available settings.  

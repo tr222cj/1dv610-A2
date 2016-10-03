@@ -5,9 +5,9 @@ namespace controller;
 
 require_once('./model/RegisterModel.php');
 
-use \View;
-use \Session;
-use \model\RegisterModel;
+use core\Session;
+use core\View;
+use model\RegisterModel;
 
 class RegisterController {
 

@@ -6,10 +6,10 @@
 </head>
 <body>
 <h1>Assignment 2</h1>
-<?php if (Session::get("isUserLoggedIn")) {
+<?php if (\core\Session::get("isUserLoggedIn")) {
     echo '<h2>Logged in</h2>';
 } else {
-    if (Session::get('action') === "register") {
+    if (\core\Session::get('action') === "register") {
         echo '<a href="?">Back to login</a>';
     } else {
         echo '<a href="?register">Register a new user</a>';

@@ -1,7 +1,9 @@
 <?php
 declare (strict_types = 1);
 
-class Session {
+namespace core;
+
+final class Session {
 
     /**
      * @param string $key

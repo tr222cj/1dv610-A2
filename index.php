@@ -1,13 +1,17 @@
 <?php
 
-// Have to include this before everything else
+// Require Config first
 require_once('./core/Config.php');
 
-//MAKE SURE ERRORS ARE SHOWN... MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
+use core\Config;
+use core\Session;
+
 if (Config::isTestEnvironment()) {
     error_reporting(E_ALL);
     ini_set('display_errors', 'On');
 }
+
+Config::requireEnvironmentSettings();
 
 // Require logic
 require_once('./core/Session.php');

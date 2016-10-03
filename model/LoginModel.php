@@ -5,9 +5,9 @@ namespace model;
 
 require_once('./model/UserModel.php');
 
-use \Session;
-use \Tools;
-use \Cookie;
+use core\Cookie;
+use core\Session;
+use core\Tools;
 
 class LoginModel {
 

@@ -3,16 +3,15 @@ declare (strict_types = 1);
 
 namespace model;
 
-use \Tools;
-use \Exception;
-use \DatabaseFactory;
+use core\DatabaseFactory;
+use core\Tools;
 
 class UserModel {
 
     /**
      * @param string $username
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public static function getUserByUserName(string $username) {
         if (empty($username)) {
@@ -32,7 +31,7 @@ class UserModel {
     /**
      * @param string $username
      * @param string $password
-     * @throws Exception
+     * @throws \Exception
      */
     public static function registerNewUser(string $username, string $password) {
         if (empty($username)) {
@@ -86,7 +85,7 @@ class UserModel {
      * @param string $username
      * @param string $data
      * @param string $columnName
-     * @throws Exception
+     * @throws \Exception
      */
     private static function saveDataToDatabase(string $username, string $data, string $columnName) {
         if (empty($username)) {
