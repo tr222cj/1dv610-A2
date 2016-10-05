@@ -38,10 +38,10 @@ class RegisterController extends Controller {
             $passwordRepeat = $_POST['RegisterView::PasswordRepeat'];
 
             if (RegisterModel::register($username, $password, $passwordRepeat)) {
-                header('Location: ' . '/?');
+                header('Location: ' . '/');
                 exit();
             } else {
-                header('Location: ' . $_SERVER['REQUEST_URI']);
+                header('Location: ' . '/?register');
                 exit();
             }
         }

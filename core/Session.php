@@ -5,16 +5,20 @@ namespace core;
 
 final class Session {
 
+    public static function start() {
+        session_start();
+    }
+
     public static function destroy() {
-        session_regenerate_id(false);
-        unset($_SESSION);
+        session_unset();
         session_destroy();
     }
 
-    public static function start() {
-        if (!isset($_SESSION)) {
-            session_start();
-        }
+    /**
+     * @return string
+     */
+    public static function getId() {
+        return session_id();
     }
 
     /**
@@ -22,8 +26,7 @@ final class Session {
      * @param mixed $value
      */
     public static function setOnce(string $key, $value) {
-        $_SESSION[$key] = $value;
-        //TODO: Should probably make this into an array so that you can have more than one set-once keys at the same time
+        self::set($key, $value);
         self::set('set-once', $key);
     }
 
@@ -79,21 +82,23 @@ final class Session {
      * @return bool
      */
     public static function isConcurrentSession() : bool {
-        $newUserIpAddress = $_SERVER['REMOTE_ADDR'];
-        $newUserBrowser = $_SERVER['HTTP_USER_AGENT'];
-        $newUserSessionId = session_id();
+        if (Session::isUserLoggedIn()) {
+            $newUserIpAddress = $_SERVER['REMOTE_ADDR'];
+            $newUserBrowser = $_SERVER['HTTP_USER_AGENT'];
+            $newUserSessionId = self::getId();
 
-        $database = DatabaseFactory::getFactory()->getConnection();
+            $database = DatabaseFactory::getFactory()->getConnection();
 
-        $sql = "SELECT sessionId, browser, ip FROM AppUser WHERE sessionId = :session_id LIMIT 1";
+            $sql = "SELECT sessionId, browser, ip FROM AppUser WHERE sessionId = :session_id LIMIT 1";
 
-        $query = $database->prepare($sql);
-        $query->execute(array(":session_id" => $newUserSessionId));
+            $query = $database->prepare($sql);
+            $query->execute(array(':session_id' => $newUserSessionId));
 
-        $existingUser = $query->fetch();
+            $existingUser = $query->fetch();
 
-        if ($newUserSessionId === $existingUser['sessionId'] && ($newUserBrowser !== $existingUser['browser'] || $newUserIpAddress !== $existingUser['ip'])) {
-            return true;
+            if ($newUserSessionId === $existingUser['sessionId'] && ($newUserBrowser !== $existingUser['browser'] || $newUserIpAddress !== $existingUser['ip'])) {
+                return true;
+            }
         }
 
         return false;

@@ -14,6 +14,7 @@ abstract class Controller {
         Session::start();
 
         if (Session::isConcurrentSession()) {
+            session_regenerate_id(false);
             Session::destroy();
         }
 

@@ -3,6 +3,10 @@ declare (strict_types = 1);
 
 namespace core;
 
+require_once('./core/Session.php');
+require_once('./core/DatabaseFactory.php');
+require_once('./core/Tools.php');
+require_once('./core/Cookie.php');
 require_once('./core/Controller.php');
 
 final class Application {

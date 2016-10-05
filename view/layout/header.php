@@ -6,15 +6,13 @@
 </head>
 <body>
 <h1>Assignment 2</h1>
-<?php if (\core\Session::get("isUserLoggedIn")) {
+<?php if (\core\Session::isUserLoggedIn()) {
     echo '<h2>Logged in</h2>';
 } else {
     if (\core\Session::get('action') === "register") {
-        echo '<a href="?">Back to login</a>';
+        echo '<a href="/">Back to login</a>';
     } else {
-        echo '<a href="?register">Register a new user</a>';
+        echo '<a href="/?register">Register a new user</a>';
     }
     echo '<h2>Not logged in</h2>';
 } ?>
-
-<div class="container">

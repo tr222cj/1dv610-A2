@@ -36,35 +36,24 @@ class LoginModel {
         }
 
         if (self::validateUserCredentials($username, $password)) {
+            Session::set('isUserLoggedIn', true);
+            Session::setOnce('feedback', 'Welcome');
+
             if ($remember) {
                 self::createTokenAndCookies($username);
                 Session::setOnce('feedback', 'Welcome and you will be remembered');
             }
 
+            UserModel::saveSessionIdByUserName($username, session_id());
+            UserModel::saveIpAdressByUserName($username, $_SERVER['REMOTE_ADDR']);
+            UserModel::saveBrowserInfoByUserName($username, $_SERVER['HTTP_USER_AGENT']);
+
             return true;
+        } else {
+            Session::set('feedback', 'Wrong name or password');
         }
 
         return false;
-    }
-
-    /**
-     * @param string $message The message to be displayed instead of default 'Bye bye!'
-     */
-    public static function logout(string $message = '') {
-        // Clear stored session data in database on logout
-        if (Session::get('user')) {
-            UserModel::saveTokenByUserName(Session::get('user')['username'], '');
-            UserModel::saveSessionIdByUserName(Session::get('user')['username'], '');
-            UserModel::saveIpAdressByUserName(Session::get('user')['username'], '');
-            UserModel::saveBrowserInfoByUserName(Session::get('user')['username'], '');
-        }
-
-        Session::destroy();
-        Session::start();
-        Session::setOnce('feedback', (empty($message) ? 'Bye bye!' : $message));
-
-        Cookie::delete('LoginView::CookieName');
-        Cookie::delete('LoginView::CookiePassword');
     }
 
     /**
@@ -76,16 +65,8 @@ class LoginModel {
         $user = UserModel::getUserByUserName($username);
 
         if (!$user || !Tools::verifyPassword($password, $user['password'])) {
-            Session::set('feedback', 'Wrong name or password');
             return false;
         }
-
-        Session::set('user', $user);
-        Session::set('isUserLoggedIn', true);
-        Session::setOnce('feedback', 'Welcome');
-        UserModel::saveSessionIdByUserName($username, session_id());
-        UserModel::saveIpAdressByUserName($username, $_SERVER['REMOTE_ADDR']);
-        UserModel::saveBrowserInfoByUserName($username, $_SERVER['HTTP_USER_AGENT']);
 
         return true;
     }
@@ -100,5 +81,24 @@ class LoginModel {
 
         Cookie::set('LoginView::CookieName', $username);
         Cookie::set('LoginView::CookiePassword', $token);
+    }
+
+    public static function logout() {
+        if (!Session::isUserLoggedIn()) {
+            return;
+        }
+
+        UserModel::saveTokenByUserName(Session::get('username'), '');
+        UserModel::saveSessionIdByUserName(Session::get('username'), '');
+        UserModel::saveIpAdressByUserName(Session::get('username'), '');
+        UserModel::saveBrowserInfoByUserName(Session::get('username'), '');
+
+        Cookie::delete('LoginView::CookieName');
+        Cookie::delete('LoginView::CookiePassword');
+
+        Session::destroy();
+
+        Session::start();
+        Session::setOnce('feedback', 'Bye bye!');
     }
 }

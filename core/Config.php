@@ -9,7 +9,7 @@ final class Config {
      * @return bool
      */
     public static function isTestEnvironment() : bool {
-        return getenv('APP_ENV') === 'test';
+        return getenv('APPLICATION_ENV') === 'test';
     }
 
     public static function requireEnvironmentSettings() {

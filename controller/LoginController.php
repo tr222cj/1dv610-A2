@@ -34,22 +34,20 @@ class LoginController extends Controller {
             }
         }
 
-        if (isset($_POST['LoginView::Logout'])) {
-            if (Session::get('isUserLoggedIn')) {
-                LoginModel::logout();
-            }
-
-            header('Location: ' . $_SERVER['REQUEST_URI']);
-            exit();
-        }
-
         if (isset($_POST['LoginView::Login'])) {
             $username = $_POST['LoginView::UserName'];
             $password = $_POST['LoginView::Password'];
             $remember = isset($_POST['LoginView::KeepMeLoggedIn']);
             LoginModel::login($username, $password, $remember);
 
-            header('Location: ' . $_SERVER['REQUEST_URI']);
+            header('Location: ' . '/');
+            exit();
+        }
+
+        if (isset($_POST['LoginView::Logout'])) {
+            LoginModel::logout();
+
+            header('Location: ' . '/');
             exit();
         }
     }
