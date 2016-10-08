@@ -1,7 +1,7 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Tomas
- * Date: 2016-10-03
- * Time: 14:39
- */
+<div class="container">
+
+    <h2>Sorry but something went wrong :(</h2>
+
+    <a href="/">Home</a>
+
+</div>

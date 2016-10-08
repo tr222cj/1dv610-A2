@@ -10,21 +10,35 @@ final class View {
      * @param array $data
      * @throws \Exception
      */
-    public function render(string $view, array $data) {
+    public function render(string $view, array $data = []) {
         foreach ($data as $key => $value) {
             $this->{$key} = $value;
         }
 
-        $view = './view/' . $view . '.php';
-
         require('./view/layout/header.php');
+
+        require('./view/layout/content.php');
+
+        self::renderRequestedView($view);
+
+        require('./view/layout/footer.php');
+    }
+
+    public function renderError(string $view) {
+        require('./view/layout/header.php');
+
+        self::renderRequestedView($view);
+
+        require('./view/layout/footer.php');
+    }
+
+    private function renderRequestedView(string $view) {
+        $view = './view/' . $view . '.php';
 
         if (file_exists($view)) {
             require($view);
         } else {
             throw new \Exception("View does not exist");
         }
-
-        require('./view/layout/footer.php');
     }
 }

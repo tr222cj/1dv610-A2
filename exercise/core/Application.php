@@ -4,6 +4,9 @@ declare (strict_types = 1);
 namespace core;
 
 require_once('./controller/Controller.php');
+require_once('./controller/ErrorController.php');
+
+use controller\ErrorController;
 
 final class Application {
 
@@ -12,12 +15,21 @@ final class Application {
         $fileName = './controller/' . $controllerName . '.php';
         $controllerName = '\\controller\\' . $controllerName;
 
-        if (file_exists($fileName)) {
-            require_once($fileName);
-            $controller = new $controllerName();
-            $controller->init();
-        } else {
-            throw new \Exception("Controller does not exist");
+        try {
+            if (file_exists($fileName)) {
+                require_once($fileName);
+                $controller = new $controllerName();
+                $controller->init();
+            } else {
+                throw new \Exception("Controller does not exist");
+            }
+        } catch (\Exception $e) {
+            if (Config::isTestEnvironment()) {
+                throw $e;
+            } else {
+                $controller = new ErrorController();
+                $controller->init();
+            }
         }
     }
 
