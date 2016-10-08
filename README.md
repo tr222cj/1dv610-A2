@@ -2,11 +2,23 @@
 Interface repository for 1DV610 assignment 2 and 4
 
 #TEST SERVER
-See: https://github.com/tr222cj/vagrant-lemp-mvc-box
+I use vagrant. All you have to do is clone this project and run
+
+```
+vagrant up
+```
+
+All the settings will be done for you, except creation of database, look below for that.
+
+For more information about the vagrant box see: https://github.com/tr222cj/vagrant-lemp-mvc-box
 
 #CREATE DATABASE
 You must manually create a database:  
 https://www.liquidweb.com/kb/create-a-mysql-database-on-linux-via-command-line/
+
+```
+vagrant ssh
+```
 
 ```
 mysql -u sql_user -p

@@ -1,2 +1,3 @@
-/.idea/
-/setting/Setting.prod.php
+.idea/
+.vagrant/
+exercise/setting/Setting.prod.php
