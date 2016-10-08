@@ -3,6 +3,9 @@ declare (strict_types = 1);
 
 namespace model;
 
+require_once('./core/DatabaseFactory.php');
+require_once('./core/Tools.php');
+
 use core\DatabaseFactory;
 use core\Tools;
 
@@ -59,30 +62,6 @@ class UserModel {
 
     /**
      * @param string $username
-     * @param string $sessionId
-     */
-    public static function saveSessionIdByUserName(string $username, string $sessionId) {
-        self::saveDataToDatabase($username, $sessionId, "sessionId");
-    }
-
-    /**
-     * @param string $username
-     * @param string $ipAddress
-     */
-    public static function saveIpAdressByUserName(string $username, string $ipAddress) {
-        self::saveDataToDatabase($username, $ipAddress, "ip");
-    }
-
-    /**
-     * @param string $username
-     * @param string $browser
-     */
-    public static function saveBrowserInfoByUserName(string $username, string $browser) {
-        self::saveDataToDatabase($username, $browser, "browser");
-    }
-
-    /**
-     * @param string $username
      * @param string $data
      * @param string $columnName
      * @throws \Exception
@@ -105,5 +84,29 @@ class UserModel {
         } else {
             throw new \Exception('Invalid columnName');
         }
+    }
+
+    /**
+     * @param string $username
+     * @param string $sessionId
+     */
+    public static function saveSessionIdByUserName(string $username, string $sessionId) {
+        self::saveDataToDatabase($username, $sessionId, "sessionId");
+    }
+
+    /**
+     * @param string $username
+     * @param string $ipAddress
+     */
+    public static function saveIpAdressByUserName(string $username, string $ipAddress) {
+        self::saveDataToDatabase($username, $ipAddress, "ip");
+    }
+
+    /**
+     * @param string $username
+     * @param string $browser
+     */
+    public static function saveBrowserInfoByUserName(string $username, string $browser) {
+        self::saveDataToDatabase($username, $browser, "browser");
     }
 }

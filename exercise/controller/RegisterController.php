@@ -5,7 +5,6 @@ namespace controller;
 
 require_once('./model/RegisterModel.php');
 
-use core\Controller;
 use core\Session;
 use model\RegisterModel;
 
