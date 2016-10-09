@@ -4,14 +4,18 @@ declare (strict_types = 1);
 namespace controller;
 
 require_once('./model/RegisterModel.php');
+require_once('./view/RegisterView.php');
 
 use core\Session;
 use model\RegisterModel;
+use view\RegisterBaseView;
 
-class RegisterController extends Controller {
+class RegisterController extends BaseController {
 
     public function __construct() {
         parent::__construct();
+
+        $this->view = new RegisterBaseView();
     }
 
     public function init() {

@@ -3,7 +3,7 @@ declare (strict_types = 1);
 
 namespace core;
 
-require_once('./controller/Controller.php');
+require_once('./controller/BaseController.php');
 require_once('./controller/ErrorController.php');
 
 use controller\ErrorController;
@@ -24,7 +24,7 @@ final class Application {
                 throw new \Exception("Controller does not exist");
             }
         } catch (\Exception $e) {
-            if (Config::isTestEnvironment()) {
+            if (Tool::isTestEnvironment()) {
                 throw $e;
             } else {
                 $controller = new ErrorController();
@@ -33,8 +33,11 @@ final class Application {
         }
     }
 
+    /**
+     * @return string
+     */
     private function getControllerName() : string {
-        $controllerName = $this->splitQueryString();
+        $controllerName = $this->getControllerNameFromQueryString();
 
         if (empty($controllerName)) {
             $controllerName = 'login';
@@ -45,7 +48,13 @@ final class Application {
         return $controllerName;
     }
 
-    private function splitQueryString() : string {
-        return explode('=', $_SERVER['QUERY_STRING'])[0];
+    /**
+     * @return string
+     */
+    private function getControllerNameFromQueryString() : string {
+        $controller = explode('/', $_SERVER["REQUEST_URI"])[1];
+        $controller = str_replace('?', '', $controller);
+
+        return $controller;
     }
 }

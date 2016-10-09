@@ -3,18 +3,19 @@
     <form method="post">
         <fieldset>
             <legend>Login - enter Username and password</legend>
-            <p id="<?= self::$loginMessage; ?>"><?= $this->message; ?></p>
+            <p id="<?= static::$loginMessage; ?>"><?= $this->message; ?></p>
 
-            <label for="<?= self::$loginName; ?>">Username :</label>
-            <input type="text" id="<?= self::$loginName; ?>" name="<?= self::$loginName; ?>" value="<?= $this->username ?>"/>
+            <label for="<?= static::$loginName; ?>">Username :</label>
+            <input type="text" id="<?= static::$loginName; ?>" name="<?= static::$loginName; ?>"
+                   value="<?= $this->username ?>"/>
 
-            <label for="<?= self::$loginPassword; ?>">Password :</label>
-            <input type="password" id="<?= self::$loginPassword; ?>" name="<?= self::$loginPassword; ?>"/>
+            <label for="<?= static::$loginPassword; ?>">Password :</label>
+            <input type="password" id="<?= static::$loginPassword; ?>" name="<?= static::$loginPassword; ?>"/>
 
-            <label for="<?= self::$loginKeep; ?>">Keep me logged in :</label>
-            <input type="checkbox" id="<?= self::$loginKeep; ?>" name="<?= self::$loginKeep; ?>"/>
+            <label for="<?= static::$loginKeep; ?>">Keep me logged in :</label>
+            <input type="checkbox" id="<?= static::$loginKeep; ?>" name="<?= static::$loginKeep; ?>"/>
 
-            <input type="submit" name="<?= self::$loginDoLogin; ?>" value="login"/>
+            <input type="submit" name="<?= static::$loginDoLogin; ?>" value="login"/>
         </fieldset>
     </form>
 

@@ -4,15 +4,14 @@ declare (strict_types = 1);
 namespace controller;
 
 require_once('./core/Session.php');
-require_once("./view/View.php");
+require_once("./view/BaseView.php");
 
 use core\Session;
+use view\BaseView;
 
-use view\View;
+abstract class BaseController {
 
-abstract class Controller {
-
-    /** @var View view */
+    /** @var BaseView view */
     protected $view;
 
     protected function __construct() {
@@ -22,7 +21,7 @@ abstract class Controller {
             session_regenerate_id(false);
             Session::destroy();
         }
-
-        $this->view = new View();
     }
+
+    abstract function init();
 }

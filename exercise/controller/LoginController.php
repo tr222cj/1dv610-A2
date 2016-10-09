@@ -5,15 +5,19 @@ namespace controller;
 
 require_once('./model/LoginModel.php');
 require_once('./core/Cookie.php');
+require_once('./view/LoginView.php');
 
 use core\Cookie;
 use core\Session;
 use model\LoginModel;
+use view\LoginBaseView;
 
-class LoginController extends Controller {
+class LoginController extends BaseController {
 
     public function __construct() {
         parent::__construct();
+
+        $this->view = new LoginBaseView();
     }
 
     public function init() {
