@@ -3,9 +3,16 @@ declare (strict_types = 1);
 
 namespace core;
 
-use settings\Setting;
+use setting\Setting;
 
-final class Tools {
+final class Tool {
+
+    /**
+     * @return bool
+     */
+    public static function isTestEnvironment() : bool {
+        return getenv('APPLICATION_ENV') === 'test';
+    }
 
     /**
      * @param string $password

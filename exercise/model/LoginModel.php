@@ -7,7 +7,7 @@ require_once('./model/UserModel.php');
 
 use core\Cookie;
 use core\Session;
-use core\Tools;
+use core\Tool;
 
 class LoginModel {
 
@@ -64,7 +64,7 @@ class LoginModel {
     private static function validateUserCredentials(string $username, string $password) : bool {
         $user = UserModel::getUserByUserName($username);
 
-        if (!$user || !Tools::verifyPassword($password, $user['password'])) {
+        if (!$user || !Tool::verifyPassword($password, $user['password'])) {
             return false;
         }
 
@@ -76,7 +76,7 @@ class LoginModel {
      * @param string $username
      */
     private static function createTokenAndCookies(string $username) {
-        $token = Tools::generateToken();
+        $token = Tool::generateToken();
         UserModel::saveTokenByUserName($username, $token);
 
         Cookie::set('LoginView::CookieName', $username);

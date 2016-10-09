@@ -2,16 +2,24 @@
 declare (strict_types = 1);
 
 // Require Config first
-require_once('./core/Config.php');
+require_once('./core/Tool.php');
 
-if (\core\Config::isTestEnvironment()) {
+use core\Tool;
+
+// Only show errors while in test environment
+if (Tool::isTestEnvironment()) {
     error_reporting(E_ALL);
     ini_set('display_errors', 'On');
 }
 
-\core\Config::requireEnvironmentSettings();
+// Require settings based on current environment
+if (Tool::isTestEnvironment()) {
+    require_once('./setting/Setting.test.php');
+} else {
+    require_once('./setting/Setting.prod.php');
+}
 
-// Require logic
+// Start the application
 require_once('./core/Application.php');
 
 new \core\Application();

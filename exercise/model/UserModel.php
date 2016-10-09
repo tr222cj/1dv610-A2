@@ -4,10 +4,10 @@ declare (strict_types = 1);
 namespace model;
 
 require_once('./core/DatabaseFactory.php');
-require_once('./core/Tools.php');
+require_once('./core/Tool.php');
 
 use core\DatabaseFactory;
-use core\Tools;
+use core\Tool;
 
 class UserModel {
 
@@ -49,7 +49,7 @@ class UserModel {
 
         $sql = 'INSERT INTO AppUser (username, password) VALUES (:username, :password);';
         $query = $database->prepare($sql);
-        $query->execute([':username' => $username, 'password' => Tools::hashPassword($password)]);
+        $query->execute([':username' => $username, 'password' => Tool::hashPassword($password)]);
     }
 
     /**

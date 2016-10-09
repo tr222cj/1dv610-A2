@@ -1,6 +1,7 @@
 <?php
+declare (strict_types = 1);
 
-namespace settings;
+namespace setting;
 
 abstract class Setting {
     const DB_HOST = "127.0.0.1";

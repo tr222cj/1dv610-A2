@@ -3,7 +3,7 @@ declare (strict_types = 1);
 
 namespace core;
 
-use settings\Setting;
+use setting\Setting;
 
 /**
  * Class Database
