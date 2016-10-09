@@ -52,9 +52,6 @@ final class Application {
      * @return string
      */
     private function getControllerNameFromQueryString() : string {
-        $controller = explode('/', $_SERVER["REQUEST_URI"])[1];
-        $controller = str_replace('?', '', $controller);
-
-        return $controller;
+        return explode('=', $_SERVER['QUERY_STRING'])[0];
     }
 }
