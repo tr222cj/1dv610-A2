@@ -1,8 +1,8 @@
 <div class="container">
 
     <form method="post">
-        <p id="LoginView::Message"><?= $this->message; ?></p>
-        <input type='submit' name='LoginView::Logout' value='logout'/>
+        <p id="<?= self::$loginMessage; ?>"><?= $this->message; ?></p>
+        <input type="submit" name="<?= self::$loginDoLogout; ?>" value="logout"/>
     </form>
 
 </div>

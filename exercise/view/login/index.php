@@ -3,18 +3,18 @@
     <form method="post">
         <fieldset>
             <legend>Login - enter Username and password</legend>
-            <p id="LoginView::Message"><?= $this->message; ?></p>
+            <p id="<?= self::$loginMessage; ?>"><?= $this->message; ?></p>
 
-            <label for="LoginView::UserName">Username :</label>
-            <input type="text" id="LoginView::UserName" name="LoginView::UserName" value="<?= $this->username ?>"/>
+            <label for="<?= self::$loginName; ?>">Username :</label>
+            <input type="text" id="<?= self::$loginName; ?>" name="<?= self::$loginName; ?>" value="<?= $this->username ?>"/>
 
-            <label for="LoginView::Password">Password :</label>
-            <input type="password" id="LoginView::Password" name="LoginView::Password"/>
+            <label for="<?= self::$loginPassword; ?>">Password :</label>
+            <input type="password" id="<?= self::$loginPassword; ?>" name="<?= self::$loginPassword; ?>"/>
 
-            <label for="LoginView::KeepMeLoggedIn">Keep me logged in :</label>
-            <input type="checkbox" id="LoginView::KeepMeLoggedIn" name="LoginView::KeepMeLoggedIn"/>
+            <label for="<?= self::$loginKeep; ?>">Keep me logged in :</label>
+            <input type="checkbox" id="<?= self::$loginKeep; ?>" name="<?= self::$loginKeep; ?>"/>
 
-            <input type="submit" name="LoginView::Login" value="login"/>
+            <input type="submit" name="<?= self::$loginDoLogin; ?>" value="login"/>
         </fieldset>
     </form>
 

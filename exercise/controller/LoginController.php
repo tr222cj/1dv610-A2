@@ -34,17 +34,17 @@ class LoginController extends Controller {
             }
         }
 
-        if (isset($_POST['LoginView::Login'])) {
-            $username = $_POST['LoginView::UserName'];
-            $password = $_POST['LoginView::Password'];
-            $remember = isset($_POST['LoginView::KeepMeLoggedIn']);
+        if ($this->view->isLoginAction()) {
+            $username = $this->view->getLoginName();
+            $password = $this->view->getLoginPassword();
+            $remember = $this->view->isLoginRememberMeSet();
             LoginModel::login($username, $password, $remember);
 
             header('Location: ' . '/');
             exit();
         }
 
-        if (isset($_POST['LoginView::Logout'])) {
+        if ($this->view->isLogoutAction()) {
             LoginModel::logout();
 
             header('Location: ' . '/');

@@ -31,10 +31,10 @@ class RegisterController extends Controller {
             $this->view->render('/register/index', $data);
         }
 
-        if (isset($_POST['RegisterView::Register'])) {
-            $username = $_POST['RegisterView::UserName'];
-            $password = $_POST['RegisterView::Password'];
-            $passwordRepeat = $_POST['RegisterView::PasswordRepeat'];
+        if ($this->view->isRegisterAction()) {
+            $username = $this->view->getRegisterName();
+            $password = $this->view->getRegisterPassword();
+            $passwordRepeat = $this->view->getRegisterPasswordRepeat();
 
             if (RegisterModel::register($username, $password, $passwordRepeat)) {
                 header('Location: ' . '/');
