@@ -4,8 +4,8 @@ declare (strict_types = 1);
 namespace controller;
 
 require_once('./model/LoginModel.php');
-require_once('./core/Cookie.php');
 require_once('./view/LoginView.php');
+require_once('./core/Cookie.php');
 
 use core\Cookie;
 use core\Session;
@@ -18,38 +18,40 @@ class LoginController extends BaseController {
         parent::__construct();
 
         $this->view = new LoginBaseView();
+        $this->model = new LoginModel();
     }
 
     public function init() {
-        Session::set('action', 'login');
+        Session::setAction('login');
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             Cookie::tryLoginByCookies();
 
             $data = [
-                'message' => Session::get('feedback'),
-                'username' => Session::get('username'),
+                'message' => Session::getFeedback(),
+                'username' => Session::getUsername(),
             ];
 
-            if (Session::get('isUserLoggedIn')) {
+            if (Session::isUserLoggedIn()) {
                 $this->view->render('/login/logout', $data);
             } else {
                 $this->view->render('/login/index', $data);
             }
         }
 
-        if ($this->view->isLoginAction()) {
-            $username = $this->view->getLoginName();
-            $password = $this->view->getLoginPassword();
-            $remember = $this->view->isLoginRememberMeSet();
-            LoginModel::login($username, $password, $remember);
+        if ($this->view->isActionLogin()) {
+            $username = $this->view->getUsername();
+            $password = $this->view->getPassword();
+            $remember = $this->view->isRememberMeSet();
+
+            $this->model->login($username, $password, $remember);
 
             header('Location: ' . '/');
             exit();
         }
 
-        if ($this->view->isLogoutAction()) {
-            LoginModel::logout();
+        if ($this->view->isActionLogout()) {
+            $this->model->logout();
 
             header('Location: ' . '/');
             exit();

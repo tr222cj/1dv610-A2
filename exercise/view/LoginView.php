@@ -15,35 +15,35 @@ class LoginBaseView extends BaseView {
     /**
      * @return string
      */
-    public function getLoginName() : string {
+    public function getUsername() : string {
         return $_POST[self::$loginName];
     }
 
     /**
      * @return string
      */
-    public function getLoginPassword() : string {
+    public function getPassword() : string {
         return $_POST[self::$loginPassword];
     }
 
     /**
      * @return bool
      */
-    public function isLoginRememberMeSet() : bool {
+    public function isRememberMeSet() : bool {
         return isset($_POST[self::$loginKeep]);
     }
 
     /**
      * @return bool
      */
-    public function isLoginAction() : bool {
+    public function isActionLogin() : bool {
         return $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST[self::$loginDoLogin]);
     }
 
     /**
      * @return bool
      */
-    public function isLogoutAction() : bool {
+    public function isActionLogout() : bool {
         return $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST[self::$loginDoLogout]);
     }
 }

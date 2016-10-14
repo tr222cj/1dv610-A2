@@ -8,18 +8,18 @@ require_once('./view/RegisterView.php');
 
 use core\Session;
 use model\RegisterModel;
-use view\RegisterBaseView;
+use view\RegisterView;
 
 class RegisterController extends BaseController {
 
     public function __construct() {
         parent::__construct();
 
-        $this->view = new RegisterBaseView();
+        $this->view = new RegisterView();
     }
 
     public function init() {
-        Session::set('action', 'register');
+        Session::setAction('register');
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (Session::isUserLoggedIn()) {
@@ -28,17 +28,17 @@ class RegisterController extends BaseController {
             }
 
             $data = [
-                'message' => Session::get('feedback-register'),
-                'username' => Session::get('username-register'),
+                'message' => Session::getFeedback(),
+                'username' => Session::getUsername(),
             ];
 
             $this->view->render('/register/index', $data);
         }
 
-        if ($this->view->isRegisterAction()) {
-            $username = $this->view->getRegisterName();
-            $password = $this->view->getRegisterPassword();
-            $passwordRepeat = $this->view->getRegisterPasswordRepeat();
+        if ($this->view->isActionRegister()) {
+            $username = $this->view->getUsername();
+            $password = $this->view->getPassword();
+            $passwordRepeat = $this->view->getPasswordRepeat();
 
             if (RegisterModel::register($username, $password, $passwordRepeat)) {
                 header('Location: ' . '/');

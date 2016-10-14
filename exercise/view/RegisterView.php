@@ -3,7 +3,7 @@ declare (strict_types = 1);
 
 namespace view;
 
-class RegisterBaseView extends BaseView {
+class RegisterView extends BaseView {
 
     protected static $registerName = 'RegisterView::UserName';
     protected static $registerPassword = 'RegisterView::Password';
@@ -11,32 +11,31 @@ class RegisterBaseView extends BaseView {
     protected static $registerMessage = 'RegisterView::Message';
     protected static $registerDoRegister = 'RegisterView::Register';
 
-    // Register - get functions
     /**
      * @return string
      */
-    public function getRegisterName() : string {
+    public function getUsername() : string {
         return $_POST[self::$registerName];
     }
 
     /**
      * @return string
      */
-    public function getRegisterPassword() : string {
+    public function getPassword() : string {
         return $_POST[self::$registerPassword];
     }
 
     /**
      * @return string
      */
-    public function getRegisterPasswordRepeat() : string {
+    public function getPasswordRepeat() : string {
         return $_POST[self::$registerPasswordRepeat];
     }
 
     /**
      * @return bool
      */
-    public function isRegisterAction() : bool {
+    public function isActionRegister() : bool {
         return $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST[self::$registerDoRegister]);
     }
 }

@@ -4,6 +4,7 @@ declare (strict_types = 1);
 namespace model;
 
 require_once('./model/UserModel.php');
+require_once('./model/UserDALMySql.php');
 
 use core\Cookie;
 use core\Session;
@@ -17,40 +18,48 @@ class LoginModel {
      * @param bool $remember
      * @return bool
      */
-    public static function login(string $username, string $password, bool $remember) : bool {
-        // Save the username up here so that we can input it into the form even if validation fails
-        Session::set('username', $username);
-
+    public function login(string $username, string $password, bool $remember) : bool {
         if (Session::isUserLoggedIn()) {
             return true;
         }
 
+        // Save the username up here so that we can input it into the form even if validation fails
+        Session::setUsername($username);
+
         if (empty($username)) {
-            Session::set('feedback', 'Username is missing');
+            Session::setFeedback('Username is missing');
             return false;
         }
 
         if (empty($password)) {
-            Session::set('feedback', 'Password is missing');
+            Session::setFeedback('Password is missing');
             return false;
         }
 
-        if (self::validateUserCredentials($username, $password)) {
-            Session::set('isUserLoggedIn', true);
-            Session::setOnce('feedback', 'Welcome');
+        if ($this->isValidUserCredentials($username, $password)) {
+            Session::setUserLoggedInStatus(true);
+            Session::setFeedback('Welcome');
+
+            $user = Session::getUser();
+            $user->setSessionId(Session::getId());
+            $user->setIp($_SERVER['REMOTE_ADDR']);
+            $user->setBrowser($_SERVER['HTTP_USER_AGENT']);
 
             if ($remember) {
-                self::createTokenAndCookies($username);
-                Session::setOnce('feedback', 'Welcome and you will be remembered');
+                $token = Tool::generateToken();
+
+                $user->setToken($token);
+
+                Cookie::setRememberMeCookies($username, $token);
+
+                Session::setFeedback('Welcome and you will be remembered');
             }
 
-            UserModel::saveSessionIdByUserName($username, session_id());
-            UserModel::saveIpAdressByUserName($username, $_SERVER['REMOTE_ADDR']);
-            UserModel::saveBrowserInfoByUserName($username, $_SERVER['HTTP_USER_AGENT']);
+            UserDALMySql::save($user);
 
             return true;
         } else {
-            Session::set('feedback', 'Wrong name or password');
+            Session::setFeedback('Wrong name or password');
         }
 
         return false;
@@ -61,44 +70,36 @@ class LoginModel {
      * @param string $password
      * @return bool
      */
-    private static function validateUserCredentials(string $username, string $password) : bool {
-        $user = UserModel::getUserByUserName($username);
+    private function isValidUserCredentials(string $username, string $password) : bool {
+        $user = UserDALMySql::select($username);
 
-        if (!$user || !Tool::verifyPassword($password, $user['password'])) {
-            return false;
+        if (Tool::verifyPassword($password, $user->getPassword())) {
+            Session::setUser($user);
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
-    /**
-     * Creates a token and necessary cookies for successful login via cookies
-     * @param string $username
-     */
-    private static function createTokenAndCookies(string $username) {
-        $token = Tool::generateToken();
-        UserModel::saveTokenByUserName($username, $token);
-
-        Cookie::set('LoginView::CookieName', $username);
-        Cookie::set('LoginView::CookiePassword', $token);
-    }
-
-    public static function logout() {
+    public function logout() {
         if (!Session::isUserLoggedIn()) {
             return;
         }
 
-        UserModel::saveTokenByUserName(Session::get('username'), '');
-        UserModel::saveSessionIdByUserName(Session::get('username'), '');
-        UserModel::saveIpAdressByUserName(Session::get('username'), '');
-        UserModel::saveBrowserInfoByUserName(Session::get('username'), '');
+        Cookie::deleteRememberMeCookies();
 
-        Cookie::delete('LoginView::CookieName');
-        Cookie::delete('LoginView::CookiePassword');
+        $user = Session::getUser();
+        $user->setToken('');
+        $user->setSessionId('');
+        $user->setIp('');
+        $user->setBrowser('');
+
+        UserDALMySql::save($user);
 
         Session::destroy();
 
         Session::start();
-        Session::setOnce('feedback', 'Bye bye!');
+        Session::setFeedback('Bye bye!');
     }
 }

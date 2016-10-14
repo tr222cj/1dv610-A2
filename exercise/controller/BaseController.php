@@ -7,12 +7,11 @@ require_once('./core/Session.php');
 require_once("./view/BaseView.php");
 
 use core\Session;
-use view\BaseView;
 
 abstract class BaseController {
 
-    /** @var BaseView view */
     protected $view;
+    protected $model;
 
     protected function __construct() {
         Session::start();

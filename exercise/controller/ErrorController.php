@@ -15,7 +15,7 @@ class ErrorController extends BaseController {
     }
 
     public function init() {
-        Session::set('action', 'error');
+        Session::setAction('error');
 
         $this->view->renderError('/error/index');
     }

@@ -3,28 +3,33 @@ declare (strict_types = 1);
 
 namespace core;
 
-use model\UserModel;
+use model\UserDALMySql;
 
 final class Cookie {
 
+    private static $usernameCookieName = 'LoginView::CookieName';
+    private static $passwordCookieName = 'LoginView::CookiePassword';
+
+    /**
+     * Tries to perform a login based on the data in cookies.
+     */
     public static function tryLoginByCookies() {
         if (Session::isUserLoggedIn() || !self::isCookiesSet()) {
             return;
         }
 
-        $username = self::get('LoginView::CookieName');
-        $token = self::get('LoginView::CookiePassword');
+        $username = self::get(self::$usernameCookieName);
+        $token = self::get(self::$passwordCookieName);
+        $user = UserDALMySql::select($username);
 
-        $user = UserModel::getUserByUserName($username);
-
-        if ($user && $user['token'] === $token) {
-            Session::setOnce('feedback', 'Welcome back with cookie');
-            Session::set('isUserLoggedIn', true);
-            Session::set('username', $user['username']);
+        if ($user && $user->getToken() === $token) {
+            Session::setFeedback('Welcome back with cookie');
+            Session::setUserLoggedInStatus(true);
+            Session::setUser($user);
         } else {
-            Session::setOnce('feedback', 'Wrong information in cookies');
-            self::delete('LoginView::CookieName');
-            self::delete('LoginView::CookiePassword');
+            Session::setFeedback('Wrong information in cookies');
+            self::delete(self::$usernameCookieName);
+            self::delete(self::$passwordCookieName);
         }
     }
 
@@ -32,22 +37,21 @@ final class Cookie {
      * @return bool
      */
     private static function isCookiesSet() : bool {
-        $cookieName = self::get('LoginView::CookieName');
-        $cookiePassword = self::get('LoginView::CookiePassword');
+        $cookieUsername = self::get(self::$usernameCookieName);
+        $cookiePassword = self::get(self::$passwordCookieName);
 
-        if (empty($cookieName) || empty($cookiePassword)) {
+        if (empty($cookieUsername) || empty($cookiePassword)) {
             return false;
         }
 
         return true;
     }
 
-
     /**
      * @param string $key
      * @return string
      */
-    public static function get(string $key) {
+    private static function get(string $key) {
         if (isset($_COOKIE[$key])) {
             return $_COOKIE[$key];
         }
@@ -59,18 +63,34 @@ final class Cookie {
      * @param string $key
      * @param string $value
      */
-    public static function set(string $key, string $value) {
+    private static function set(string $key, string $value) {
         setcookie($key, $value, time() + 3600 * 24 * 7, '/', $_SERVER['SERVER_NAME'], false, true);
     }
 
     /**
      * @param string $key
      */
-    public static function delete(string $key) {
+    private static function delete(string $key) {
         if (isset($_COOKIE[$key])) {
-            $_COOKIE[$key] = '';
             unset($_COOKIE[$key]);
             setcookie($key, '', time() - 3600, '/', $_SERVER['SERVER_NAME'], false, true);
         }
+    }
+
+    /**
+     * @param string $username
+     * @param string $token
+     */
+    public static function setRememberMeCookies(string $username, string $token) {
+        self::set(self::$usernameCookieName, $username);
+        self::set(self::$passwordCookieName, $token);
+    }
+
+    /**
+     *
+     */
+    public static function deleteRememberMeCookies() {
+        self::delete(self::$usernameCookieName);
+        self::delete(self::$passwordCookieName);
     }
 }

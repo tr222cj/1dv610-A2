@@ -4,10 +4,14 @@ declare (strict_types = 1);
 namespace model;
 
 require_once('./model/UserModel.php');
+require_once('./model/UserDALMySql.php');
 
 use core\Session;
 
 class RegisterModel {
+
+    private static $minNumberOfCharsInUsername = 3;
+    private static $minNumberOfCharsInPassword = 6;
 
     /**
      * @param string $username
@@ -17,47 +21,50 @@ class RegisterModel {
      */
     public static function register(string $username, string $password, string $passwordRepeated) : bool {
         // Save the username up here so that we can input it into the form even if validation fails
-        Session::set('username-register', $username);
+        Session::setUsername($username);
 
         $feedback = '';
-        $success = true;
+        $fail = false;
 
-        if (strlen($username) < 3) {
+        if (strlen($username) >= self::$minNumberOfCharsInUsername && UserDALMySql::select($username)->getId() !== 0) {
+            Session::setFeedback('User exists, pick another username.');
+            return false;
+        }
+
+        if (strlen($username) < self::$minNumberOfCharsInUsername) {
             $feedback .= 'Username has too few characters, at least 3 characters.<br/>';
-            $success = false;
+            $fail = true;
         }
 
-        if (strlen($password) < 6) {
+        if (strlen($password) < self::$minNumberOfCharsInPassword) {
             $feedback .= 'Password has too few characters, at least 6 characters.<br/>';
-            $success = false;
+            $fail = true;
         }
 
-        // Do this check BEFORE you send anything to the database
         if ($username !== strip_tags($username)) {
-            Session::set('username-register', strip_tags($username));
+            Session::setUsername(strip_tags($username));
             $feedback .= 'Username contains invalid characters.<br/>';
-            $success = false;
+            $fail = true;
         }
 
-        if (!$success) {
-            Session::setOnce('feedback-register', $feedback);
+        if ($fail) {
+            Session::setFeedback($feedback);
             return false;
         }
 
         if ($password !== $passwordRepeated) {
-            Session::setOnce('feedback-register', 'Passwords do not match.');
+            Session::setFeedback('Passwords do not match.');
             return false;
         }
 
+        $user = new UserModel();
+        $user->setUsername($username);
+        $user->setAndHashPassword($password);
 
-        if (UserModel::getUserByUserName($username)) {
-            Session::setOnce('feedback-register', 'User exists, pick another username.');
-            return false;
-        }
+        UserDALMySql::save($user);
 
-        UserModel::registerNewUser($username, $password);
-        Session::setOnce('feedback', 'Registered new user.');
-        Session::set('username', $username);
+        Session::setFeedback('Registered new user.');
+
         return true;
     }
 }
