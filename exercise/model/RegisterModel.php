@@ -3,12 +3,9 @@ declare (strict_types = 1);
 
 namespace model;
 
-require_once('./model/UserModel.php');
-require_once('./model/UserDALMySql.php');
-
 use core\Session;
 
-class RegisterModel {
+final class RegisterModel {
 
     private static $minNumberOfCharsInUsername = 3;
     private static $minNumberOfCharsInPassword = 6;

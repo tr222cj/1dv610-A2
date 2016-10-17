@@ -3,12 +3,11 @@ declare (strict_types = 1);
 
 namespace view;
 
-class BaseView {
+abstract class BaseView {
 
     /**
      * @param string $view
      * @param array $data
-     * @throws \Exception
      */
     public function render(string $view, array $data = []) {
         foreach ($data as $key => $value) {
@@ -26,8 +25,13 @@ class BaseView {
 
     /**
      * @param string $view
+     * @param array $data
      */
-    public function renderError(string $view) {
+    public function renderWithoutMenu(string $view, array $data = []) {
+        foreach ($data as $key => $value) {
+            $this->{$key} = $value;
+        }
+
         require('./view/layout/header.php');
 
         $this->renderRequestedView($view);

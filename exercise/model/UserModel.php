@@ -3,8 +3,6 @@ declare (strict_types = 1);
 
 namespace model;
 
-require_once("./core/Tools.php");
-
 use core\Tool;
 
 final class UserModel {

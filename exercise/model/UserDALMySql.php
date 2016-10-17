@@ -3,13 +3,14 @@ declare (strict_types = 1);
 
 namespace model;
 
-require_once('./core/DatabaseFactory.php');
-require_once('./model/UserDAL.php');
-
 use core\DatabaseFactory;
 use PDO;
 
-abstract class UserDALMySql implements UserDAL {
+final class UserDALMySql implements UserDAL {
+
+    private function __construct() {
+        // EMPTY: Private construct prevents initialization
+    }
 
     public static function select(string $username) : UserModel {
         if (empty($username)) {

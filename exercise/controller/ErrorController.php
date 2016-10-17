@@ -4,19 +4,23 @@ declare (strict_types = 1);
 namespace controller;
 
 use core\Session;
-use view\BaseView;
+use view\ErrorView;
 
-class ErrorController extends BaseController {
+final class ErrorController extends BaseController {
 
     public function __construct() {
         parent::__construct();
 
-        $this->view = new BaseView();
+        $this->view = new ErrorView();
     }
 
     public function init() {
         Session::setAction('error');
 
-        $this->view->renderError('/error/index');
+        $data = [
+            'message' => Session::getErrorMessage(),
+        ];
+
+        $this->view->renderWithoutMenu('/error/index', $data);
     }
 }

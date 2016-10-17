@@ -7,6 +7,10 @@ use setting\Setting;
 
 final class Tool {
 
+    private function __construct() {
+        // EMPTY: Private construct prevents initialization
+    }
+
     /**
      * @return bool
      */

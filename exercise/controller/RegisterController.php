@@ -3,14 +3,11 @@ declare (strict_types = 1);
 
 namespace controller;
 
-require_once('./model/RegisterModel.php');
-require_once('./view/RegisterView.php');
-
 use core\Session;
 use model\RegisterModel;
 use view\RegisterView;
 
-class RegisterController extends BaseController {
+final class RegisterController extends BaseController {
 
     public function __construct() {
         parent::__construct();

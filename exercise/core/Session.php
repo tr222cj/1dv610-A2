@@ -7,6 +7,10 @@ use model\UserModel;
 
 final class Session {
 
+    private function __construct() {
+        // EMPTY: Private construct prevents initialization
+    }
+
     public static function start() {
         session_start();
     }
@@ -129,6 +133,20 @@ final class Session {
      */
     public static function setAction(string $action) {
         self::set('action', $action);
+    }
+
+    /**
+     * @return string
+     */
+    public static function getErrorMessage() : string {
+        return strval(self::get('errorMessage'));
+    }
+
+    /**
+     * @param string $errorMessage
+     */
+    public static function setErrorMessage(string $errorMessage) {
+        self::set('errorMessage', $errorMessage);
     }
 
     /**

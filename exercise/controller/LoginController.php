@@ -3,21 +3,17 @@ declare (strict_types = 1);
 
 namespace controller;
 
-require_once('./model/LoginModel.php');
-require_once('./view/LoginView.php');
-require_once('./core/Cookie.php');
-
 use core\Cookie;
 use core\Session;
 use model\LoginModel;
-use view\LoginBaseView;
+use view\LoginView;
 
-class LoginController extends BaseController {
+final class LoginController extends BaseController {
 
     public function __construct() {
         parent::__construct();
 
-        $this->view = new LoginBaseView();
+        $this->view = new LoginView();
         $this->model = new LoginModel();
     }
 

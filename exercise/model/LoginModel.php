@@ -3,14 +3,11 @@ declare (strict_types = 1);
 
 namespace model;
 
-require_once('./model/UserModel.php');
-require_once('./model/UserDALMySql.php');
-
 use core\Cookie;
 use core\Session;
 use core\Tool;
 
-class LoginModel {
+final class LoginModel {
 
     /**
      * @param string $username
@@ -47,11 +44,8 @@ class LoginModel {
 
             if ($remember) {
                 $token = Tool::generateToken();
-
                 $user->setToken($token);
-
                 Cookie::setRememberMeCookies($username, $token);
-
                 Session::setFeedback('Welcome and you will be remembered');
             }
 

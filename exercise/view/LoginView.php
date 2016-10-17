@@ -3,7 +3,7 @@ declare (strict_types = 1);
 
 namespace view;
 
-class LoginBaseView extends BaseView {
+final class LoginView extends BaseView {
 
     protected static $loginName = 'LoginView::UserName';
     protected static $loginPassword = 'LoginView::Password';

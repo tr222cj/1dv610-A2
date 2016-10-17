@@ -10,6 +10,10 @@ final class Cookie {
     private static $usernameCookieName = 'LoginView::CookieName';
     private static $passwordCookieName = 'LoginView::CookiePassword';
 
+    private function __construct() {
+        // EMPTY: Private construct prevents initialization
+    }
+
     /**
      * Tries to perform a login based on the data in cookies.
      */
@@ -27,9 +31,8 @@ final class Cookie {
             Session::setUserLoggedInStatus(true);
             Session::setUser($user);
         } else {
+            self::deleteRememberMeCookies();
             Session::setFeedback('Wrong information in cookies');
-            self::delete(self::$usernameCookieName);
-            self::delete(self::$passwordCookieName);
         }
     }
 

@@ -3,7 +3,11 @@ declare (strict_types = 1);
 
 namespace setting;
 
-abstract class Setting {
+final class Setting {
+
+    private function __construct() {
+        // EMPTY: Private construct prevents initialization
+    }
 
     // Database settings
     const DB_HOST = "127.0.0.1";
